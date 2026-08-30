@@ -1,0 +1,17 @@
+diff --git a/Mathlib/LinearAlgebra/Dimension/Finite.lean b/Mathlib/LinearAlgebra/Dimension/Finite.lean
+index 7e10464..db0b2bd 100644
+--- a/Mathlib/LinearAlgebra/Dimension/Finite.lean
++++ b/Mathlib/LinearAlgebra/Dimension/Finite.lean
+@@ -210,10 +210,8 @@ lemma exists_linearIndependent_of_le_rank {n : ℕ} (hn : n ≤ Module.rank R M)
+   have ⟨_, hs, hs'⟩ := exists_finset_linearIndependent_of_le_rank hn
+   ⟨_, (linearIndependent_equiv (Finset.equivFinOfCardEq hs).symm).mpr hs'⟩
+ 
+-lemma natCast_le_rank_iff [Nontrivial R] {n : ℕ} :
+-    n ≤ Module.rank R M ↔ ∃ f : Fin n → M, LinearIndependent R f :=
+-  ⟨exists_linearIndependent_of_le_rank,
+-    fun H ↦ by simpa using H.choose_spec.cardinal_lift_le_rank⟩
++@[deprecated (since := "2026-08-29")]
++alias natCast_le_rank_iff := Module.le_rank_iff
+ 
+ lemma natCast_le_rank_iff_finset [Nontrivial R] {n : ℕ} :
+     n ≤ Module.rank R M ↔ ∃ s : Finset M, s.card = n ∧ LinearIndependent R ((↑) : s → M) :=

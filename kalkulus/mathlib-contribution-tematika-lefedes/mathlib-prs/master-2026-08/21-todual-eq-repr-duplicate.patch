@@ -1,0 +1,23 @@
+diff --git a/Mathlib/LinearAlgebra/Dual/Basis.lean b/Mathlib/LinearAlgebra/Dual/Basis.lean
+index cd38377..4309dbd 100644
+--- a/Mathlib/LinearAlgebra/Dual/Basis.lean
++++ b/Mathlib/LinearAlgebra/Dual/Basis.lean
+@@ -88,14 +88,14 @@ def toDualFlip (m : M) : M →ₗ[R] R :=
+ theorem toDualFlip_apply (m₁ m₂ : M) : b.toDualFlip m₁ m₂ = b.toDual m₂ m₁ :=
+   rfl
+ 
+-theorem toDual_eq_repr (m : M) (i : ι) : b.toDual m (b i) = b.repr m i :=
+-  b.toDual_apply_left m i
++@[deprecated (since := "2026-08-29")]
++alias toDual_eq_repr := toDual_apply_left
+ 
+ theorem toDual_eq_equivFun [Finite ι] (m : M) (i : ι) : b.toDual m (b i) = b.equivFun m i := by
+-  rw [b.equivFun_apply, toDual_eq_repr]
++  rw [b.equivFun_apply, toDual_apply_left]
+ 
+ theorem toDual_injective : Injective b.toDual := fun x y h ↦ b.ext_elem_iff.mpr fun i ↦ by
+-  simp_rw [← toDual_eq_repr]; exact DFunLike.congr_fun h _
++  simp_rw [← toDual_apply_left]; exact DFunLike.congr_fun h _
+ 
+ theorem toDual_inj (m : M) (a : b.toDual m = 0) : m = 0 :=
+   b.toDual_injective (by rwa [map_zero])

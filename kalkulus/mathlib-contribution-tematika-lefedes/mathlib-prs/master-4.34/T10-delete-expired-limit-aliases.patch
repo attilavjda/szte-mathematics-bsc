@@ -1,0 +1,28 @@
+diff --git a/Mathlib/Analysis/SpecialFunctions/Log/Monotone.lean b/Mathlib/Analysis/SpecialFunctions/Log/Monotone.lean
+index daaa4ea8..8c5f8672 100644
+--- a/Mathlib/Analysis/SpecialFunctions/Log/Monotone.lean
++++ b/Mathlib/Analysis/SpecialFunctions/Log/Monotone.lean
+@@ -36,10 +36,6 @@ theorem mul_log_strictMonoOn : StrictMonoOn (fun x ↦ x * log x) <| .Ici <| exp
+   have hpos : 0 < x := by grind [Real.exp_pos]
+   grind [deriv_mul_log, Real.lt_log_iff_exp_lt hpos |>.mpr hlt]
+ 
+-@[deprecated Real.mul_log_strictMonoOn (since := "2026-04-07")]
+-theorem log_mul_self_monotoneOn : MonotoneOn (fun x : ℝ => log x * x) { x | 1 ≤ x } := by
+-  grind [mul_log_strictMonoOn.monotoneOn, MonotoneOn.mono, show exp (-1) < 1 by norm_num]
+-
+ theorem mul_log_strictAntiOn :
+     StrictAntiOn (fun x : ℝ ↦ x * log x) <| .Icc 0 (exp (-1)) := by
+   refine strictAntiOn_of_deriv_neg (convex_Icc ..) continuous_mul_log.continuousOn fun x hx ↦ ?_
+diff --git a/Mathlib/Analysis/SpecificLimits/Basic.lean b/Mathlib/Analysis/SpecificLimits/Basic.lean
+index 10248c5b..19ae3e8d 100644
+--- a/Mathlib/Analysis/SpecificLimits/Basic.lean
++++ b/Mathlib/Analysis/SpecificLimits/Basic.lean
+@@ -395,8 +395,6 @@ theorem NNReal.summable_geometric {r : ℝ≥0} (hr : r < 1) : Summable fun n :
+ theorem NNReal.tsum_geometric {r : ℝ≥0} (hr : r < 1) : ∑' n : ℕ, r ^ n = (1 - r)⁻¹ :=
+   (NNReal.hasSum_geometric hr).tsum_eq
+ 
+-@[deprecated (since := "2026-03-18")] alias tsum_geometric_nnreal := NNReal.tsum_geometric
+-
+ /-- The series `pow r` converges to `(1-r)⁻¹`. For `r < 1` the RHS is a finite number,
+ and for `1 ≤ r` the RHS equals `∞`. -/
+ @[simp]

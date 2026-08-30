@@ -1,0 +1,67 @@
+diff --git a/Mathlib/LinearAlgebra/Determinant.lean b/Mathlib/LinearAlgebra/Determinant.lean
+index 9fbd1a9..67e03a3 100644
+--- a/Mathlib/LinearAlgebra/Determinant.lean
++++ b/Mathlib/LinearAlgebra/Determinant.lean
+@@ -401,11 +401,11 @@ theorem det_pi [Module.Free R M] [Module.Finite R M] (f : ι → M →ₗ[R] M)
+       Matrix.blockDiagonal (fun i ↦ LinearMap.toMatrix b b (f i)) := by
+     ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩
+     unfold B
+-    simp_rw [LinearMap.toMatrix_apply', Matrix.blockDiagonal_apply, Basis.coe_reindex,
++    simp_rw [LinearMap.toMatrix_apply, Matrix.blockDiagonal_apply, Basis.coe_reindex,
+       Function.comp_apply, Basis.repr_reindex_apply, Equiv.symm_trans_apply, Equiv.prodComm_symm,
+       Equiv.prodComm_apply, Equiv.sigmaEquivProd_symm_apply, Prod.swap_prod_mk, Pi.basis_apply,
+       Pi.basis_repr, LinearMap.pi_apply, LinearMap.coe_comp, Function.comp_apply,
+-      LinearMap.toMatrix_apply', LinearMap.coe_proj, Function.eval, Pi.single_apply]
++      LinearMap.toMatrix_apply, LinearMap.coe_proj, Function.eval, Pi.single_apply]
+     split_ifs with h
+     · rw [h]
+     · simp only [map_zero, Finsupp.coe_zero, Pi.zero_apply]
+diff --git a/Mathlib/LinearAlgebra/Matrix/ToLin.lean b/Mathlib/LinearAlgebra/Matrix/ToLin.lean
+index d6abc65..7293c4f 100644
+--- a/Mathlib/LinearAlgebra/Matrix/ToLin.lean
++++ b/Mathlib/LinearAlgebra/Matrix/ToLin.lean
+@@ -623,13 +623,11 @@ theorem LinearMap.toMatrix_transpose_apply (f : M₁ →ₗ[R] M₂) (j : n) :
+     (LinearMap.toMatrix v₁ v₂ f)ᵀ j = v₂.repr (f (v₁ j)) :=
+   funext fun i ↦ f.toMatrix_apply _ _ i j
+ 
+-theorem LinearMap.toMatrix_apply' (f : M₁ →ₗ[R] M₂) (i : m) (j : n) :
+-    LinearMap.toMatrix v₁ v₂ f i j = v₂.repr (f (v₁ j)) i :=
+-  LinearMap.toMatrix_apply v₁ v₂ f i j
++@[deprecated (since := "2026-08-29")]
++alias LinearMap.toMatrix_apply' := LinearMap.toMatrix_apply
+ 
+-theorem LinearMap.toMatrix_transpose_apply' (f : M₁ →ₗ[R] M₂) (j : n) :
+-    (LinearMap.toMatrix v₁ v₂ f)ᵀ j = v₂.repr (f (v₁ j)) :=
+-  LinearMap.toMatrix_transpose_apply v₁ v₂ f j
++@[deprecated (since := "2026-08-29")]
++alias LinearMap.toMatrix_transpose_apply' := LinearMap.toMatrix_transpose_apply
+ 
+ /-- This will be a special case of `LinearMap.toMatrix_id_eq_basis_toMatrix`. -/
+ theorem LinearMap.toMatrix_id : LinearMap.toMatrix v₁ v₁ id = 1 := by
+@@ -829,13 +827,11 @@ theorem LinearMap.toMatrixAlgEquiv_transpose_apply (f : M₁ →ₗ[R] M₁) (j
+     (LinearMap.toMatrixAlgEquiv v₁ f)ᵀ j = v₁.repr (f (v₁ j)) :=
+   funext fun i ↦ f.toMatrix_apply _ _ i j
+ 
+-theorem LinearMap.toMatrixAlgEquiv_apply' (f : M₁ →ₗ[R] M₁) (i j : n) :
+-    LinearMap.toMatrixAlgEquiv v₁ f i j = v₁.repr (f (v₁ j)) i :=
+-  LinearMap.toMatrixAlgEquiv_apply v₁ f i j
++@[deprecated (since := "2026-08-29")]
++alias LinearMap.toMatrixAlgEquiv_apply' := LinearMap.toMatrixAlgEquiv_apply
+ 
+-theorem LinearMap.toMatrixAlgEquiv_transpose_apply' (f : M₁ →ₗ[R] M₁) (j : n) :
+-    (LinearMap.toMatrixAlgEquiv v₁ f)ᵀ j = v₁.repr (f (v₁ j)) :=
+-  LinearMap.toMatrixAlgEquiv_transpose_apply v₁ f j
++@[deprecated (since := "2026-08-29")]
++alias LinearMap.toMatrixAlgEquiv_transpose_apply' := LinearMap.toMatrixAlgEquiv_transpose_apply
+ 
+ theorem Matrix.toLinAlgEquiv_apply (M : Matrix n n R) (v : M₁) :
+     Matrix.toLinAlgEquiv v₁ M v = ∑ j, (M *ᵥ v₁.repr v) j • v₁ j :=
+@@ -920,7 +916,7 @@ variable {m : Type*} [Fintype m] [DecidableEq m] (b : Basis m R S)
+ 
+ theorem toMatrix_lmul' (x : S) (i j) :
+     LinearMap.toMatrix b b (lmul R S x) i j = b.repr (x * b j) i := by
+-  simp only [LinearMap.toMatrix_apply', coe_lmul_eq_mul, LinearMap.mul_apply']
++  simp only [LinearMap.toMatrix_apply, coe_lmul_eq_mul, LinearMap.mul_apply']
+ 
+ @[simp]
+ theorem toMatrix_lsmul (x : R) :

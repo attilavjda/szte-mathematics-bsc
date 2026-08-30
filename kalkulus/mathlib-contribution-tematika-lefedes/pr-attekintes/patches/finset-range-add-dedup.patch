@@ -1,0 +1,42 @@
+diff --git a/Mathlib/Combinatorics/Additive/AP/Three/Defs.lean b/Mathlib/Combinatorics/Additive/AP/Three/Defs.lean
+index 90f54a67c2..855f1c829a 100644
+--- a/Mathlib/Combinatorics/Additive/AP/Three/Defs.lean
++++ b/Mathlib/Combinatorics/Additive/AP/Three/Defs.lean
+@@ -428,7 +428,7 @@ limit is actually `0`. -/
+ theorem rothNumberNat_add_le (M N : ℕ) :
+     rothNumberNat (M + N) ≤ rothNumberNat M + rothNumberNat N := by
+   simp_rw [rothNumberNat_def]
+-  rw [range_add_eq_union, ← addRothNumber_map_add_left (range N) M]
++  rw [range_add, ← addRothNumber_map_add_left (range N) M]
+   exact addRothNumber_union_le _ _
+ 
+ @[simp]
+diff --git a/Mathlib/Order/Interval/Finset/Nat.lean b/Mathlib/Order/Interval/Finset/Nat.lean
+index 1cd6946de1..226f582d56 100644
+--- a/Mathlib/Order/Interval/Finset/Nat.lean
++++ b/Mathlib/Order/Interval/Finset/Nat.lean
+@@ -6,6 +6,7 @@ Authors: Yaël Dillies
+ module
+ 
+ public import Mathlib.Algebra.Group.Embedding
++public import Mathlib.Algebra.Group.Nat.Range
+ public import Mathlib.Order.Interval.Multiset
+ 
+ /-!
+@@ -230,15 +231,7 @@ theorem range_image_pred_top_sub (n : ℕ) :
+   · rw [Finset.range_eq_Ico, Nat.Ico_image_const_sub_eq_Ico (Nat.zero_le _)]
+     simp_rw [succ_sub_succ, Nat.sub_zero, Nat.sub_self]
+ 
+-theorem range_add_eq_union : range (a + b) = range a ∪ (range b).map (addLeftEmbedding a) := by
+-  simp_rw [Finset.range_eq_Ico, map_eq_image]
+-  convert! (Ico_union_Ico_eq_Ico a.zero_le (a.le_add_right b)).symm
+-  ext x
+-  simp only [Ico_zero_eq_range, mem_image, mem_range, addLeftEmbedding_apply, mem_Ico]
+-  constructor
+-  · lia
+-  · rintro h
+-    exact ⟨x - a, by lia⟩
++@[deprecated (since := "2026-08-25")] alias range_add_eq_union := range_add
+ 
+ end Finset
+ 

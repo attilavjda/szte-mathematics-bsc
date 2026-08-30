@@ -1,0 +1,22 @@
+diff --git a/Mathlib/Analysis/Calculus/LHopital.lean b/Mathlib/Analysis/Calculus/LHopital.lean
+index ed851220..a47f765b 100644
+--- a/Mathlib/Analysis/Calculus/LHopital.lean
++++ b/Mathlib/Analysis/Calculus/LHopital.lean
+@@ -215,6 +215,17 @@ theorem lhopital_zero_left_on_Ioo (hab : a < b) (hdf : DifferentiableOn ℝ f (I
+   exact HasDerivAt.lhopital_zero_left_on_Ioo hab (fun x hx => (hdf x hx).hasDerivAt)
+     (fun x hx => (hdg x hx).hasDerivAt) hg' hfb hgb hdiv
+ 
++theorem lhopital_zero_left_on_Ioc (hab : a < b) (hdf : DifferentiableOn ℝ f (Ioo a b))
++    (hcf : ContinuousOn f (Ioc a b)) (hcg : ContinuousOn g (Ioc a b))
++    (hg' : ∀ x ∈ Ioo a b, (deriv g) x ≠ 0) (hfb : f b = 0) (hgb : g b = 0)
++    (hdiv : Tendsto (fun x => (deriv f) x / (deriv g) x) (𝓝[<] b) l) :
++    Tendsto (fun x => f x / g x) (𝓝[<] b) l := by
++  refine lhopital_zero_left_on_Ioo hab hdf hg' ?_ ?_ hdiv
++  · rw [← hfb, ← nhdsWithin_Ioo_eq_nhdsLT hab]
++    exact ((hcf b <| right_mem_Ioc.mpr hab).mono Ioo_subset_Ioc_self).tendsto
++  · rw [← hgb, ← nhdsWithin_Ioo_eq_nhdsLT hab]
++    exact ((hcg b <| right_mem_Ioc.mpr hab).mono Ioo_subset_Ioc_self).tendsto
++
+ theorem lhopital_zero_atTop_on_Ioi (hdf : DifferentiableOn ℝ f (Ioi a))
+     (hg' : ∀ x ∈ Ioi a, (deriv g) x ≠ 0) (hftop : Tendsto f atTop (𝓝 0))
+     (hgtop : Tendsto g atTop (𝓝 0)) (hdiv : Tendsto (fun x => (deriv f) x / (deriv g) x) atTop l) :

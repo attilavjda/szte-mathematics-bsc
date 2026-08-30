@@ -1,0 +1,25 @@
+diff --git a/Mathlib/Analysis/Calculus/Deriv/MeanValue.lean b/Mathlib/Analysis/Calculus/Deriv/MeanValue.lean
+index fe34dfb8..013b9101 100644
+--- a/Mathlib/Analysis/Calculus/Deriv/MeanValue.lean
++++ b/Mathlib/Analysis/Calculus/Deriv/MeanValue.lean
+@@ -460,16 +460,16 @@ theorem strictAnti_of_deriv_neg {f : ℝ → ℝ} (hf' : ∀ x, deriv f x < 0) :
+       fun x _ => hf' x
+ 
+ /-- Let `f` be a function continuous on a convex (or, equivalently, connected) subset `D`
+-of the real line. If `f` is differentiable on the interior of `D` and `f'` is strictly positive,
+-then `f` is a strictly monotone function on `D`. -/
++of the real line. If `f` is differentiable on the interior of `D` and `f'` is strictly negative,
++then `f` is a strictly antitone function on `D`. -/
+ lemma strictAntiOn_of_hasDerivWithinAt_neg {D : Set ℝ} (hD : Convex ℝ D) {f f' : ℝ → ℝ}
+     (hf : ContinuousOn f D) (hf' : ∀ x ∈ interior D, HasDerivWithinAt f (f' x) (interior D) x)
+     (hf'₀ : ∀ x ∈ interior D, f' x < 0) : StrictAntiOn f D :=
+   strictAntiOn_of_deriv_neg hD hf fun x hx ↦ by
+     rw [deriv_eqOn isOpen_interior hf' hx]; exact hf'₀ _ hx
+ 
+-/-- Let `f : ℝ → ℝ` be a differentiable function. If `f'` is strictly positive, then
+-`f` is a strictly monotone function. -/
++/-- Let `f : ℝ → ℝ` be a differentiable function. If `f'` is strictly negative, then
++`f` is a strictly antitone function. -/
+ lemma strictAnti_of_hasDerivAt_neg {f f' : ℝ → ℝ} (hf : ∀ x, HasDerivAt f (f' x) x)
+     (hf' : ∀ x, f' x < 0) : StrictAnti f :=
+   strictAnti_of_deriv_neg fun x ↦ by rw [(hf _).deriv]; exact hf' _

@@ -1,0 +1,41 @@
+diff --git a/Mathlib/Combinatorics/Pigeonhole.lean b/Mathlib/Combinatorics/Pigeonhole.lean
+index 71c5c72130..8a1632ed7c 100644
+--- a/Mathlib/Combinatorics/Pigeonhole.lean
++++ b/Mathlib/Combinatorics/Pigeonhole.lean
+@@ -25,11 +25,11 @@ have.
+ The basic statements of the pigeonhole principle appear in the
+ following locations:
+ 
+-* `Data.Finset.Basic` has `Finset.exists_ne_map_eq_of_card_lt_of_maps_to`
+-* `Data.Fintype.Basic` has `Fintype.exists_ne_map_eq_of_card_lt`
+-* `Data.Fintype.Basic` has `Finite.exists_ne_map_eq_of_infinite`
+-* `Data.Fintype.Basic` has `Finite.exists_infinite_fiber`
+-* `Data.Set.Finite` has `Set.infinite.exists_ne_map_eq_of_mapsTo`
++* `Mathlib/Data/Finset/Card.lean` has `Finset.exists_ne_map_eq_of_card_lt_of_maps_to`
++* `Mathlib/Data/Fintype/Pigeonhole.lean` has `Fintype.exists_ne_map_eq_of_card_lt`
++* `Mathlib/Data/Fintype/Pigeonhole.lean` has `Finite.exists_ne_map_eq_of_infinite`
++* `Mathlib/Data/Fintype/Pigeonhole.lean` has `Finite.exists_infinite_fiber`
++* `Mathlib/Data/Set/Finite/Basic.lean` has `Set.Infinite.exists_ne_map_eq_of_mapsTo`
+ 
+ This module gives access to these pigeonhole principles along with 20 more.
+ The versions vary by:
+@@ -54,7 +54,7 @@ docstrings instead of the names.
+ 
+ ## See also
+ 
+-* `Ordinal.infinite_pigeonhole`: pigeonhole principle for cardinals, formulated using cofinality;
++* `Cardinal.infinite_pigeonhole`: pigeonhole principle for cardinals, formulated using cofinality;
+ 
+ * `MeasureTheory.exists_nonempty_inter_of_measure_univ_lt_tsum_measure`,
+   `MeasureTheory.exists_nonempty_inter_of_measure_univ_lt_sum_measure`: pigeonhole principle in a
+@@ -212,8 +212,8 @@ weaker version. Second, we can either state that there exists a pigeonhole with
+ pigeons, or state that there exists a pigeonhole with at most `n` pigeons. In the latter case we do
+ not need the assumption `∀ a ∈ s, f a ∈ t`.
+ 
+-So, we prove four theorems: `Finset.exists_lt_card_fiber_of_maps_to_of_mul_lt_card`,
+-`Finset.exists_le_card_fiber_of_maps_to_of_mul_le_card`,
++So, we prove four theorems: `Finset.exists_lt_card_fiber_of_mul_lt_card_of_maps_to`,
++`Finset.exists_le_card_fiber_of_mul_le_card_of_maps_to`,
+ `Finset.exists_card_fiber_lt_of_card_lt_mul`, and `Finset.exists_card_fiber_le_of_card_le_mul`. -/
+ 
+ 

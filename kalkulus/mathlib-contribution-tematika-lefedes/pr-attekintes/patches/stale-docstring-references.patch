@@ -1,0 +1,132 @@
+diff --git a/Mathlib/Algebra/Order/Group/Unbundled/Basic.lean b/Mathlib/Algebra/Order/Group/Unbundled/Basic.lean
+index ca9d325c1b..e38e5b17d5 100644
+--- a/Mathlib/Algebra/Order/Group/Unbundled/Basic.lean
++++ b/Mathlib/Algebra/Order/Group/Unbundled/Basic.lean
+@@ -534,8 +534,8 @@ section LE
+ 
+ variable [LE α] [MulLeftMono α] {a b c d : α}
+ 
+-/-- See also `div_le_div_iff` for a version that works for `LinearOrderedSemifield` with
+-additional assumptions. -/
++/-- See also `div_le_div_iff₀` for a version that works in a `CommGroupWithZero` with
++additional positivity assumptions on the denominators. -/
+ @[to_additive sub_le_sub_iff]
+ theorem div_le_div_iff' : a / b ≤ c / d ↔ a * d ≤ c * b := by
+   simpa only [div_eq_mul_inv] using mul_inv_le_mul_inv_iff'
+diff --git a/Mathlib/Data/Nat/Choose/Basic.lean b/Mathlib/Data/Nat/Choose/Basic.lean
+index 1cd090d71c..b185fd613f 100644
+--- a/Mathlib/Data/Nat/Choose/Basic.lean
++++ b/Mathlib/Data/Nat/Choose/Basic.lean
+@@ -29,11 +29,11 @@ see `Finset.card_powersetCard` in `Mathlib/Data/Finset/Powerset.lean`.
+   for the ascending factorial.
+ * `Nat.multichoose`: whereas `choose` counts combinations, `multichoose` counts multicombinations.
+   The fact that this is indeed the correct counting function for multisets is proved in
+-  `Sym.card_sym_eq_multichoose` in `Data.Sym.Card`.
++  `Sym.card_sym_eq_multichoose` in `Mathlib/Data/Sym/Card.lean`.
+ * `Nat.multichoose_eq` : a proof that `multichoose n k = (n + k - 1).choose k`.
+   This is central to the "stars and bars" technique in informal mathematics, where we switch between
+   counting multisets of size `k` over an alphabet of size `n` to counting strings of `k` elements
+-  ("stars") separated by `n-1` dividers ("bars").  See `Data.Sym.Card` for more detail.
++  ("stars") separated by `n-1` dividers ("bars").  See `Mathlib/Data/Sym/Card.lean` for more detail.
+ 
+ ## Tags
+ 
+diff --git a/Mathlib/Data/Nat/Choose/Factorization.lean b/Mathlib/Data/Nat/Choose/Factorization.lean
+index ab5859f3bc..c31f3d0792 100644
+--- a/Mathlib/Data/Nat/Choose/Factorization.lean
++++ b/Mathlib/Data/Nat/Choose/Factorization.lean
+@@ -192,7 +192,7 @@ theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n :
+   rw [factorization_choose hp hkn (Nat.lt_add_one _)]
+   exact (card_filter_le ..).trans_eq (Nat.card_Ico _ _)
+ 
+-/-- A `pow` form of `Nat.factorization_choose_le` -/
++/-- A `pow` form of `Nat.factorization_choose_le_log` -/
+ theorem pow_factorization_choose_le (hn : 0 < n) : p ^ (choose n k).factorization p ≤ n :=
+   pow_le_of_le_log hn.ne' factorization_choose_le_log
+ 
+diff --git a/Mathlib/Order/Interval/Finset/Basic.lean b/Mathlib/Order/Interval/Finset/Basic.lean
+index 1f91209e68..165ab8fbcc 100644
+--- a/Mathlib/Order/Interval/Finset/Basic.lean
++++ b/Mathlib/Order/Interval/Finset/Basic.lean
+@@ -13,7 +13,7 @@ public import Mathlib.Order.Preorder.Finite
+ # Intervals as finsets
+ 
+ This file provides basic results about all the `Finset.Ixx`, which are defined in
+-`Order.Interval.Finset.Defs`.
++`Mathlib/Order/Interval/Finset/Defs.lean`.
+ 
+ In addition, it shows that in a locally finite order `≤` and `<` are the transitive closures of,
+ respectively, `⩿` and `⋖`, which then leads to a characterization of monotone and strictly
+diff --git a/Mathlib/Order/Interval/Finset/Defs.lean b/Mathlib/Order/Interval/Finset/Defs.lean
+index 85288571b4..3c3013f3fe 100644
+--- a/Mathlib/Order/Interval/Finset/Defs.lean
++++ b/Mathlib/Order/Interval/Finset/Defs.lean
+@@ -47,20 +47,20 @@ In a `LocallyFiniteOrderBot`,
+ ## Instances
+ 
+ A `LocallyFiniteOrder` instance can be built
+-* for a subtype of a locally finite order. See `Subtype.locallyFiniteOrder`.
+-* for the product of two locally finite orders. See `Prod.locallyFiniteOrder`.
++* for a subtype of a locally finite order. See `Subtype.instLocallyFiniteOrder`.
++* for the product of two locally finite orders. See `Prod.instLocallyFiniteOrder`.
+ * for any fintype (but not as an instance). See `Fintype.toLocallyFiniteOrder`.
+ * from a definition of `Finset.Icc` alone. See `LocallyFiniteOrder.ofIcc`.
+ * by pulling back `LocallyFiniteOrder β` through an order embedding `f : α →o β`. See
+   `OrderEmbedding.locallyFiniteOrder`.
+ 
+ Instances for concrete types are proved in their respective files:
+-* `ℕ` is in `Order.Interval.Finset.Nat`
+-* `ℤ` is in `Data.Int.Interval`
+-* `ℕ+` is in `Data.PNat.Interval`
+-* `Fin n` is in `Order.Interval.Finset.Fin`
+-* `Finset α` is in `Data.Finset.Interval`
+-* `Σ i, α i` is in `Data.Sigma.Interval`
++* `ℕ` is in `Mathlib/Order/Interval/Finset/Nat.lean`
++* `ℤ` is in `Mathlib/Data/Int/Interval.lean`
++* `ℕ+` is in `Mathlib/Data/PNat/Interval.lean`
++* `Fin n` is in `Mathlib/Order/Interval/Finset/Fin.lean`
++* `Finset α` is in `Mathlib/Data/Finset/Interval.lean`
++* `Σ i, α i` is in `Mathlib/Data/Sigma/Interval.lean`
+ 
+ Along, you will find lemmas about the cardinality of those finite intervals.
+ 
+@@ -463,11 +463,12 @@ open Lean Elab Term Meta Batteries.ExtendedBinder
+   is `Finset ?α`.
+ 
+ See also
+-* `Data.Set.Defs` for the `Set` builder notation elaborator that this elaborator partly overrides.
+-* `Data.Finset.Basic` for the `Finset` builder notation elaborator partly overriding this one for
+-  syntax of the form `{x ∈ s | p x}`.
+-* `Data.Fintype.Basic` for the `Finset` builder notation elaborator handling syntax of the form
+-  `{x | p x}`, `{x : α | p x}`, `{x ∉ s | p x}`, `{x ≠ a | p x}`.
++* `Mathlib/Data/Set/Defs.lean` for the `Set` builder notation elaborator that this elaborator
++  partly overrides.
++* `Mathlib/Data/Finset/Basic.lean` for the `Finset` builder notation elaborator partly
++  overriding this one for syntax of the form `{x ∈ s | p x}`.
++* `Mathlib/Data/Fintype/Basic.lean` for the `Finset` builder notation elaborator handling
++  syntax of the form `{x | p x}`, `{x : α | p x}`, `{x ∉ s | p x}`, `{x ≠ a | p x}`.
+ 
+ TODO: Write a delaborator
+ -/
+@@ -567,7 +568,7 @@ noncomputable def LocallyFiniteOrder.ofFiniteIcc (h : ∀ a b : α, (Set.Icc a b
+ /-- A fintype is a locally finite order.
+ 
+ This is not an instance as it would not be defeq to better instances such as
+-`Fin.locallyFiniteOrder`.
++`Fin.instLocallyFiniteOrder`.
+ -/
+ abbrev Fintype.toLocallyFiniteOrder [Fintype α] [DecidableLT α] [DecidableLE α] :
+     LocallyFiniteOrder α where
+diff --git a/Mathlib/Order/Interval/Finset/Gaps.lean b/Mathlib/Order/Interval/Finset/Gaps.lean
+index b08c7057fc..88e4bc71cd 100644
+--- a/Mathlib/Order/Interval/Finset/Gaps.lean
++++ b/Mathlib/Order/Interval/Finset/Gaps.lean
+@@ -26,7 +26,7 @@ If `LinearOrder α`, `F` is a finite subset of `α × α` such that for any `(x,
+ Technically, the definition `F.intervalGapsWithin a b` does not require `F` to be pairwise disjoint
+ or endpoints to be within `[a, b]` or even require that `a ≤ b`, but it makes the most sense if
+ they are actually satisfied. If they are actually satisfied, then we show that
+-* `Finset.intervalGapsWithin_mapsTo`, `Finset.intervalGapsWithin_injective`,
++* `Finset.intervalGapsWithin_mapsTo`, `Finset.intervalGapsWithin_injOn`,
+   `Finset.intervalGapsWithin_surjOn`:
+   `(fun j ↦ ((F.intervalGapsWithin h a b j.castSucc).2, (F.intervalGapsWithin h a b j.succ).1))` is
+   a bijection between `Set.Iio k` and `F`.

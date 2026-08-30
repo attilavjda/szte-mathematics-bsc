@@ -1,0 +1,13 @@
+diff --git a/Mathlib/Analysis/Calculus/DerivativeTest.lean b/Mathlib/Analysis/Calculus/DerivativeTest.lean
+index 1017da17..69c89a80 100644
+--- a/Mathlib/Analysis/Calculus/DerivativeTest.lean
++++ b/Mathlib/Analysis/Calculus/DerivativeTest.lean
+@@ -32,7 +32,7 @@ Source: [Wikipedia](https://en.wikipedia.org/wiki/Derivative_test#Proof_of_the_s
+   we have `f′(x) ≥ 0`, and for every `x` in `Ioo a (a + r)` we have `f′(x) ≤ 0`,
+   then `f` has a local maximum at `a`.
+ 
+-* `isLocalMin_of_deriv_Ioo`: The dual of `first_derivative_max`, for minima.
++* `isLocalMin_of_deriv_Ioo`: The dual of `isLocalMax_of_deriv_Ioo`, for minima.
+ 
+ * `isLocalMax_of_deriv`: 1st derivative test for maxima using filters.
+ 

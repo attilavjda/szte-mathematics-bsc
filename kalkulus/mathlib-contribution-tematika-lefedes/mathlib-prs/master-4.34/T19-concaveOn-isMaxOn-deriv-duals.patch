@@ -1,0 +1,30 @@
+diff --git a/Mathlib/Analysis/Convex/Deriv.lean b/Mathlib/Analysis/Convex/Deriv.lean
+index 1b4b7285..acdae07c 100644
+--- a/Mathlib/Analysis/Convex/Deriv.lean
++++ b/Mathlib/Analysis/Convex/Deriv.lean
+@@ -950,6 +950,25 @@ theorem antitoneOn_deriv (hfc : ConcaveOn ℝ S f) (hfd : ∀ x ∈ S, Different
+     AntitoneOn (deriv f) S := by
+   simpa using (hfc.neg.monotoneOn_deriv (fun x hx ↦ (hfd x hx).neg)).neg
+ 
++lemma isMaxOn_of_leftDeriv_nonneg_of_rightDeriv_nonpos (hf : ConcaveOn ℝ S f) (hx : x ∈ interior S)
++    (hf_ld : 0 ≤ derivWithin f (Iio x) x) (hf_rd : derivWithin f (Ioi x) x ≤ 0) :
++    IsMaxOn f S x := by
++  have h := hf.neg.isMinOn_of_leftDeriv_nonpos_of_rightDeriv_nonneg hx
++    (by simpa [derivWithin.neg] using hf_ld) (by simpa [derivWithin.neg] using hf_rd)
++  simpa using h.neg
++
++lemma isMaxOn_of_rightDeriv_eq_zero (hf : ConcaveOn ℝ S f) (hx : x ∈ interior S)
++    (hf_rd : derivWithin f (Ioi x) x = 0) :
++    IsMaxOn f S x := by
++  have h := hf.neg.isMinOn_of_rightDeriv_eq_zero hx (by simpa [derivWithin.neg] using hf_rd)
++  simpa using h.neg
++
++lemma isMaxOn_of_leftDeriv_eq_zero (hf : ConcaveOn ℝ S f) (hx : x ∈ interior S)
++    (hf_ld : derivWithin f (Iio x) x = 0) :
++    IsMaxOn f S x := by
++  have h := hf.neg.isMinOn_of_leftDeriv_eq_zero hx (by simpa [derivWithin.neg] using hf_ld)
++  simpa using h.neg
++
+ end ConcaveOn
+ 
+ namespace StrictConcaveOn

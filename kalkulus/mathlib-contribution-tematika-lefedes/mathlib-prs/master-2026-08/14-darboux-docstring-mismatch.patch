@@ -1,0 +1,19 @@
+diff --git a/Mathlib/Analysis/Calculus/Darboux.lean b/Mathlib/Analysis/Calculus/Darboux.lean
+index 8718cc3..da7b614 100644
+--- a/Mathlib/Analysis/Calculus/Darboux.lean
++++ b/Mathlib/Analysis/Calculus/Darboux.lean
+@@ -122,10 +122,10 @@ theorem Convex.image_deriv {s : Set ℝ} (hs : Convex ℝ s) (hf : ∀ x ∈ s,
+ /-- **Darboux's theorem**: if `a ≤ b` and `f' a ≤ m ≤ f' b`, then `f' c = m` for some
+ `c ∈ [a, b]`. -/
+ theorem exists_hasDerivWithinAt_eq_of_ge_of_le (hab : a ≤ b)
+-    (hf : ∀ x ∈ Icc a b, HasDerivWithinAt f (f' x) (Icc a b) x) {m : ℝ} (hma : f' a ≤ m)
+-    (hmb : m ≤ f' b) : m ∈ f' '' Icc a b :=
+-  (ordConnected_Icc.image_hasDerivWithinAt hf).out (mem_image_of_mem _ (left_mem_Icc.2 hab))
+-    (mem_image_of_mem _ (right_mem_Icc.2 hab)) ⟨hma, hmb⟩
++    (hf : ∀ x ∈ Icc a b, HasDerivWithinAt f (f' x) (Icc a b) x) {m : ℝ} (hma : m ≤ f' a)
++    (hmb : f' b ≤ m) : m ∈ f' '' Icc a b :=
++  (ordConnected_Icc.image_hasDerivWithinAt hf).out (mem_image_of_mem _ (right_mem_Icc.2 hab))
++    (mem_image_of_mem _ (left_mem_Icc.2 hab)) ⟨hmb, hma⟩
+ 
+ /-- **Darboux's theorem**: if `a ≤ b` and `f' b ≤ m ≤ f' a`, then `f' c = m` for some
+ `c ∈ [a, b]`. -/

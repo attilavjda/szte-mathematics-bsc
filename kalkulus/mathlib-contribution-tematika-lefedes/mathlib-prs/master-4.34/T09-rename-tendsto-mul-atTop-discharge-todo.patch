@@ -1,0 +1,74 @@
+diff --git a/Mathlib/Topology/Algebra/Order/Field.lean b/Mathlib/Topology/Algebra/Order/Field.lean
+index ca0fea74..1b0c772c 100644
+--- a/Mathlib/Topology/Algebra/Order/Field.lean
++++ b/Mathlib/Topology/Algebra/Order/Field.lean
+@@ -40,9 +40,6 @@ theorem Filter.Tendsto.atTop_mul_pos {C : 𝕜} (hC : 0 < C) (hf : Tendsto f l a
+   filter_upwards [hg.eventually (lt_mem_nhds (half_lt_self hC)), hf.eventually_ge_atTop 0] with x hg
+     hf using mul_le_mul_of_nonneg_left hg.le hf
+ 
+--- TODO: after removing this deprecated alias,
+--- rename `Filter.Tendsto.atTop_mul'` to `Filter.Tendsto.atTop_mul`.
+--- Same for the other 3 similar aliases below.
+ /-- In a linearly ordered semifield with the order topology, if `f` tends to a positive constant `C`
+ and `g` tends to `Filter.atTop` then `f * g` tends to `Filter.atTop`. -/
+ theorem Filter.Tendsto.pos_mul_atTop {C : 𝕜} (hC : 0 < C) (hf : Tendsto f l (𝓝 C))
+diff --git a/Mathlib/Topology/Order/LeftRightNhds.lean b/Mathlib/Topology/Order/LeftRightNhds.lean
+index 2e9fd6d7..c2b15b73 100644
+--- a/Mathlib/Topology/Order/LeftRightNhds.lean
++++ b/Mathlib/Topology/Order/LeftRightNhds.lean
+@@ -397,9 +397,9 @@ theorem eventually_mabs_div_lt (a : α) {ε : α} (hε : 1 < ε) : ∀ᶠ x in 
+ 
+ /-- In a linearly ordered commutative group with the order topology,
+ if `f` tends to `C` and `g` tends to `atTop` then `f * g` tends to `atTop`. -/
+-@[to_additive add_atTop /-- In a linearly ordered additive commutative group with the order
++@[to_additive /-- In a linearly ordered additive commutative group with the order
+ topology, if `f` tends to `C` and `g` tends to `atTop` then `f + g` tends to `atTop`. -/]
+-theorem Filter.Tendsto.mul_atTop' {C : α} (hf : Tendsto f l (𝓝 C)) (hg : Tendsto g l atTop) :
++theorem Filter.Tendsto.mul_atTop {C : α} (hf : Tendsto f l (𝓝 C)) (hg : Tendsto g l atTop) :
+     Tendsto (fun x => f x * g x) l atTop := by
+   nontriviality α
+   obtain ⟨C', hC'⟩ : ∃ C', C' < C := exists_lt C
+@@ -408,29 +408,34 @@ theorem Filter.Tendsto.mul_atTop' {C : α} (hf : Tendsto f l (𝓝 C)) (hg : Ten
+ 
+ /-- In a linearly ordered commutative group with the order topology,
+ if `f` tends to `C` and `g` tends to `atBot` then `f * g` tends to `atBot`. -/
+-@[to_additive add_atBot /-- In a linearly ordered additive commutative group with the order
++@[to_additive /-- In a linearly ordered additive commutative group with the order
+ topology, if `f` tends to `C` and `g` tends to `atBot` then `f + g` tends to `atBot`. -/]
+-theorem Filter.Tendsto.mul_atBot' {C : α} (hf : Tendsto f l (𝓝 C)) (hg : Tendsto g l atBot) :
++theorem Filter.Tendsto.mul_atBot {C : α} (hf : Tendsto f l (𝓝 C)) (hg : Tendsto g l atBot) :
+     Tendsto (fun x => f x * g x) l atBot :=
+-  Filter.Tendsto.mul_atTop' (α := αᵒᵈ) hf hg
++  Filter.Tendsto.mul_atTop (α := αᵒᵈ) hf hg
+ 
+ /-- In a linearly ordered commutative group with the order topology,
+ if `f` tends to `atTop` and `g` tends to `C` then `f * g` tends to `atTop`. -/
+-@[to_additive atTop_add /-- In a linearly ordered additive commutative group with the order
++@[to_additive /-- In a linearly ordered additive commutative group with the order
+ topology, if `f` tends to `atTop` and `g` tends to `C` then `f + g` tends to `atTop`. -/]
+-theorem Filter.Tendsto.atTop_mul' {C : α} (hf : Tendsto f l atTop) (hg : Tendsto g l (𝓝 C)) :
++theorem Filter.Tendsto.atTop_mul {C : α} (hf : Tendsto f l atTop) (hg : Tendsto g l (𝓝 C)) :
+     Tendsto (fun x => f x * g x) l atTop := by
+   conv in _ * _ => rw [mul_comm]
+-  exact hg.mul_atTop' hf
++  exact hg.mul_atTop hf
+ 
+ /-- In a linearly ordered commutative group with the order topology,
+ if `f` tends to `atBot` and `g` tends to `C` then `f * g` tends to `atBot`. -/
+-@[to_additive atBot_add /-- In a linearly ordered additive commutative group with the order
++@[to_additive /-- In a linearly ordered additive commutative group with the order
+ topology, if `f` tends to `atBot` and `g` tends to `C` then `f + g` tends to `atBot`. -/]
+-theorem Filter.Tendsto.atBot_mul' {C : α} (hf : Tendsto f l atBot) (hg : Tendsto g l (𝓝 C)) :
++theorem Filter.Tendsto.atBot_mul {C : α} (hf : Tendsto f l atBot) (hg : Tendsto g l (𝓝 C)) :
+     Tendsto (fun x => f x * g x) l atBot := by
+   conv in _ * _ => rw [mul_comm]
+-  exact hg.mul_atBot' hf
++  exact hg.mul_atBot hf
++
++@[deprecated (since := "2026-08-29")] alias Filter.Tendsto.mul_atTop' := Filter.Tendsto.mul_atTop
++@[deprecated (since := "2026-08-29")] alias Filter.Tendsto.mul_atBot' := Filter.Tendsto.mul_atBot
++@[deprecated (since := "2026-08-29")] alias Filter.Tendsto.atTop_mul' := Filter.Tendsto.atTop_mul
++@[deprecated (since := "2026-08-29")] alias Filter.Tendsto.atBot_mul' := Filter.Tendsto.atBot_mul
+ 
+ @[to_additive]
+ theorem nhds_basis_mabs_div_lt [NoMaxOrder α] (a : α) :

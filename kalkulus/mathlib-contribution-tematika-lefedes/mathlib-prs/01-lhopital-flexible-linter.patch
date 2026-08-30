@@ -1,0 +1,34 @@
+diff --git a/Mathlib/Analysis/Calculus/LHopital.lean b/Mathlib/Analysis/Calculus/LHopital.lean
+index df2492f..39073ab 100644
+--- a/Mathlib/Analysis/Calculus/LHopital.lean
++++ b/Mathlib/Analysis/Calculus/LHopital.lean
+@@ -50,8 +50,6 @@ to be satisfied on an explicitly-provided interval.
+ 
+ namespace HasDerivAt
+ 
+--- TODO: fix non-terminal simp (acting on three goals, with different simp sets)
+-set_option linter.flexible false in
+ theorem lhopital_zero_right_on_Ioo (hab : a < b) (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x)
+     (hgg' : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ Ioo a b, g' x ≠ 0)
+     (hfa : Tendsto f (𝓝[>] a) (𝓝 0)) (hga : Tendsto g (𝓝[>] a) (𝓝 0))
+@@ -80,15 +78,12 @@ theorem lhopital_zero_right_on_Ioo (hab : a < b) (hff' : ∀ x ∈ Ioo a b, HasD
+   rw [← nhdsWithin_Ioo_eq_nhdsGT hab]
+   apply tendsto_nhdsWithin_congr this
+   apply hdiv.comp
+-  refine tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
++  exact tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
+     (tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds
+-      (tendsto_nhdsWithin_of_tendsto_nhds tendsto_id) ?_ ?_) ?_
+-  all_goals
+-    apply eventually_nhdsWithin_of_forall
+-    intro x hx
+-    have := cmp x hx
+-    simp
+-    linarith [this]
++      (tendsto_nhdsWithin_of_tendsto_nhds tendsto_id)
++      (eventually_nhdsWithin_of_forall fun x hx => (cmp x hx).1.le)
++      (eventually_nhdsWithin_of_forall fun x hx => (cmp x hx).2.le))
++    (eventually_nhdsWithin_of_forall fun x hx => (cmp x hx).1)
+ 
+ theorem lhopital_zero_right_on_Ico (hab : a < b) (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x)
+     (hgg' : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (hcf : ContinuousOn f (Ico a b))

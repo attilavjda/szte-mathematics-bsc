@@ -1,0 +1,23 @@
+diff --git a/Mathlib/LinearAlgebra/UnitaryGroup.lean b/Mathlib/LinearAlgebra/UnitaryGroup.lean
+index 8964a1f..a5e9803 100644
+--- a/Mathlib/LinearAlgebra/UnitaryGroup.lean
++++ b/Mathlib/LinearAlgebra/UnitaryGroup.lean
+@@ -140,15 +140,13 @@ variable (A B : unitaryGroup n α)
+ 
+ @[simp] theorem inv_val : ↑A⁻¹ = (star A : Matrix n n α) := rfl
+ 
+-@[simp] theorem inv_apply : ⇑A⁻¹ = (star A : Matrix n n α) := rfl
+-
+ @[simp] theorem mul_val : ↑(A * B) = A.1 * B.1 := rfl
+ 
+-@[simp] theorem mul_apply : ⇑(A * B) = A.1 * B.1 := rfl
+-
+ @[simp] theorem one_val : ↑(1 : unitaryGroup n α) = (1 : Matrix n n α) := rfl
+ 
+-@[simp] theorem one_apply : ⇑(1 : unitaryGroup n α) = (1 : Matrix n n α) := rfl
++@[deprecated (since := "2026-08-29")] alias inv_apply := inv_val
++@[deprecated (since := "2026-08-29")] alias mul_apply := mul_val
++@[deprecated (since := "2026-08-29")] alias one_apply := one_val
+ 
+ @[simp]
+ theorem toLin'_mul : toLin' (A * B) = (toLin' A).comp (toLin' B) :=

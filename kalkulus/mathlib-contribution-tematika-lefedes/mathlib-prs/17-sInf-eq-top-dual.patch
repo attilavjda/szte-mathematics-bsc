@@ -1,0 +1,14 @@
+diff --git a/Mathlib/Order/CompleteLattice/Basic.lean b/Mathlib/Order/CompleteLattice/Basic.lean
+index b9fefb9..e3c256a 100644
+--- a/Mathlib/Order/CompleteLattice/Basic.lean
++++ b/Mathlib/Order/CompleteLattice/Basic.lean
+@@ -154,6 +154,9 @@ theorem sInf_eq_top : sInf s = ⊤ ↔ ∀ a ∈ s, a = ⊤ :=
+ lemma sSup_eq_bot' {s : Set α} : sSup s = ⊥ ↔ s = ∅ ∨ s = {⊥} := by
+   rw [sSup_eq_bot, ← subset_singleton_iff_eq, subset_singleton_iff]
+ 
++lemma sInf_eq_top' {s : Set α} : sInf s = ⊤ ↔ s = ∅ ∨ s = {⊤} :=
++  @sSup_eq_bot' αᵒᵈ _ _
++
+ theorem eq_singleton_bot_of_sSup_eq_bot_of_nonempty {s : Set α} (h_sup : sSup s = ⊥)
+     (hne : s.Nonempty) : s = {⊥} := by
+   rw [Set.eq_singleton_iff_nonempty_unique_mem]

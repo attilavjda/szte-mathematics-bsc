@@ -1,0 +1,81 @@
+diff --git a/Mathlib/Algebra/Order/Group/Abs.lean b/Mathlib/Algebra/Order/Group/Abs.lean
+index df35708857..a72e2dd662 100644
+--- a/Mathlib/Algebra/Order/Group/Abs.lean
++++ b/Mathlib/Algebra/Order/Group/Abs.lean
+@@ -104,22 +104,6 @@ theorem div_lt_of_mabs_div_lt_left (h : |a / b|ₘ < c) : b / c < a :=
+ theorem div_lt_of_mabs_div_lt_right (h : |a / b|ₘ < c) : a / c < b :=
+   div_lt_of_mabs_div_lt_left (mabs_div_comm a b ▸ h)
+ 
+-@[to_additive]
+-theorem mabs_div_mabs_le_mabs_div (a b : G) : |a|ₘ / |b|ₘ ≤ |a / b|ₘ :=
+-  div_le_iff_le_mul.2 <|
+-    calc
+-      |a|ₘ = |a / b * b|ₘ := by rw [div_mul_cancel]
+-      _ ≤ |a / b|ₘ * |b|ₘ := mabs_mul_le _ _
+-
+-@[to_additive]
+-theorem mabs_div_mabs_le_mabs_mul (a b : G) : |a|ₘ / |b|ₘ ≤ |a * b|ₘ :=
+-  mabs_inv b ▸ div_inv_eq_mul a b ▸ mabs_div_mabs_le_mabs_div a b⁻¹
+-
+-@[to_additive]
+-theorem mabs_mabs_div_mabs_le_mabs_div (a b : G) : |(|a|ₘ / |b|ₘ)|ₘ ≤ |a / b|ₘ :=
+-  mabs_div_le_iff.2
+-    ⟨mabs_div_mabs_le_mabs_div _ _, by rw [mabs_div_comm]; apply mabs_div_mabs_le_mabs_div⟩
+-
+ /-- `|a / b|ₘ ≤ n` if `1 ≤ a ≤ n` and `1 ≤ b ≤ n`. -/
+ @[to_additive /-- `|a - b| ≤ n` if `0 ≤ a ≤ n` and `0 ≤ b ≤ n`. -/]
+ theorem mabs_div_le_of_one_le_of_le {a b n : G} (one_le_a : 1 ≤ a) (a_le_n : a ≤ n)
+diff --git a/Mathlib/Algebra/Order/Group/Unbundled/Abs.lean b/Mathlib/Algebra/Order/Group/Unbundled/Abs.lean
+index 29f5079a24..8e887696da 100644
+--- a/Mathlib/Algebra/Order/Group/Unbundled/Abs.lean
++++ b/Mathlib/Algebra/Order/Group/Unbundled/Abs.lean
+@@ -127,15 +127,27 @@ lemma mabs_mul_le (a b : α) : |a * b|ₘ ≤ |a|ₘ * |b|ₘ := by
+     exact mul_le_mul' (inv_le_mabs _) (inv_le_mabs _)
+ 
+ @[to_additive]
+-lemma mabs_mabs_div_mabs_le (a b : α) : |(|a|ₘ / |b|ₘ)|ₘ ≤ |a / b|ₘ := by
+-  rw [mabs, sup_le_iff]
+-  constructor
+-  · apply div_le_iff_le_mul.2
+-    convert! mabs_mul_le (a / b) b
+-    rw [div_mul_cancel]
+-  · rw [div_eq_mul_inv, mul_inv_rev, inv_inv, mul_inv_le_iff_le_mul, mabs_div_comm]
+-    convert! mabs_mul_le (b / a) a
+-    · rw [div_mul_cancel]
++lemma mabs_div_mabs_le_mabs_div (a b : α) : |a|ₘ / |b|ₘ ≤ |a / b|ₘ :=
++  div_le_iff_le_mul.2 <|
++    calc
++      |a|ₘ = |a / b * b|ₘ := by rw [div_mul_cancel]
++      _ ≤ |a / b|ₘ * |b|ₘ := mabs_mul_le _ _
++
++@[to_additive]
++lemma mabs_div_mabs_le_mabs_mul (a b : α) : |a|ₘ / |b|ₘ ≤ |a * b|ₘ :=
++  mabs_inv b ▸ div_inv_eq_mul a b ▸ mabs_div_mabs_le_mabs_div a b⁻¹
++
++@[to_additive]
++lemma mabs_mabs_div_mabs_le_mabs_div (a b : α) : |(|a|ₘ / |b|ₘ)|ₘ ≤ |a / b|ₘ := by
++  rw [mabs, sup_le_iff, inv_div]
++  exact ⟨mabs_div_mabs_le_mabs_div a b,
++    (mabs_div_mabs_le_mabs_div b a).trans_eq (mabs_div_comm b a)⟩
++
++@[deprecated (since := "2026-08-16")]
++alias mabs_mabs_div_mabs_le := mabs_mabs_div_mabs_le_mabs_div
++
++@[deprecated (since := "2026-08-16")]
++alias abs_abs_sub_abs_le := abs_abs_sub_abs_le_abs_sub
+ 
+ @[to_additive] lemma sup_div_inf_eq_mabs_div (a b : α) : (a ⊔ b) / (a ⊓ b) = |b / a|ₘ := by
+   simp_rw [sup_div, div_inf, div_self', sup_comm, sup_sup_sup_comm, sup_idem]
+diff --git a/Mathlib/Analysis/Normed/Order/Lattice.lean b/Mathlib/Analysis/Normed/Order/Lattice.lean
+index 2f23e4812b..834bab7695 100644
+--- a/Mathlib/Analysis/Normed/Order/Lattice.lean
++++ b/Mathlib/Analysis/Normed/Order/Lattice.lean
+@@ -149,7 +149,7 @@ Let `α` be a normed lattice ordered group. Then `α` is a topological lattice i
+ instance (priority := 100) HasSolidNorm.toTopologicalLattice : TopologicalLattice α :=
+   TopologicalLattice.mk
+ 
+-theorem norm_abs_sub_abs (a b : α) : ‖|a| - |b|‖ ≤ ‖a - b‖ := solid (abs_abs_sub_abs_le _ _)
++theorem norm_abs_sub_abs (a b : α) : ‖|a| - |b|‖ ≤ ‖a - b‖ := solid (abs_abs_sub_abs_le_abs_sub _ _)
+ 
+ theorem norm_sup_sub_sup_le_norm (x y z : α) : ‖x ⊔ z - y ⊔ z‖ ≤ ‖x - y‖ :=
+   solid (abs_sup_sub_sup_le_abs x y z)

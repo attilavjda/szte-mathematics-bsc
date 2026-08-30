@@ -1,0 +1,34 @@
+diff --git a/Mathlib/Analysis/SpecialFunctions/Complex/Arg.lean b/Mathlib/Analysis/SpecialFunctions/Complex/Arg.lean
+index 3e35b6c..d003e9b 100644
+--- a/Mathlib/Analysis/SpecialFunctions/Complex/Arg.lean
++++ b/Mathlib/Analysis/SpecialFunctions/Complex/Arg.lean
+@@ -330,21 +330,15 @@ theorem arg_inv (x : ℂ) : arg x⁻¹ = if arg x = π then π else -arg x := by
+ 
+ @[simp] lemma abs_arg_inv (x : ℂ) : |x⁻¹.arg| = |x.arg| := by rw [arg_inv]; split_ifs <;> simp [*]
+ 
+--- TODO: Replace the next two lemmas by general facts about periodic functions
+-lemma norm_eq_one_iff' : ‖x‖ = 1 ↔ ∃ θ ∈ Set.Ioc (-π) π, exp (θ * I) = x := by
+-  rw [norm_eq_one_iff]
+-  constructor
+-  · rintro ⟨θ, rfl⟩
+-    refine ⟨toIocMod (mul_pos two_pos Real.pi_pos) (-π) θ, ?_, ?_⟩
+-    · convert! toIocMod_mem_Ioc _ _ _
+-      ring
+-    · rw [eq_sub_of_add_eq <| toIocMod_add_toIocDiv_zsmul _ _ θ, ofReal_sub,
+-      ofReal_zsmul, ofReal_mul, ofReal_ofNat, exp_mul_I_periodic.sub_zsmul_eq]
+-  · rintro ⟨θ, _, rfl⟩
+-    exact ⟨θ, rfl⟩
+-
+ lemma image_exp_Ioc_eq_sphere : (fun θ : ℝ ↦ exp (θ * I)) '' Set.Ioc (-π) π = sphere 0 1 := by
+-  ext; simpa using norm_eq_one_iff'.symm
++  have hper : Function.Periodic (fun θ : ℝ ↦ exp (θ * I)) (2 * π) := fun θ ↦ by
++    simpa using exp_mul_I_periodic (θ : ℂ)
++  rw [show Set.Ioc (-π) π = Set.Ioc (-π) (-π + 2 * π) from by ring_nf,
++    hper.image_Ioc Real.two_pi_pos, range_exp_mul_I]
++
++lemma norm_eq_one_iff' : ‖x‖ = 1 ↔ ∃ θ ∈ Set.Ioc (-π) π, exp (θ * I) = x := by
++  rw [← mem_sphere_zero_iff_norm, ← image_exp_Ioc_eq_sphere]
++  simp
+ 
+ theorem arg_le_pi_div_two_iff {z : ℂ} : arg z ≤ π / 2 ↔ 0 ≤ re z ∨ im z < 0 := by
+   rcases le_or_gt 0 (re z) with hre | hre

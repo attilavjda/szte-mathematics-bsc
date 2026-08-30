@@ -1,0 +1,47 @@
+diff --git a/Mathlib/Topology/MetricSpace/ProperSpace/Lemmas.lean b/Mathlib/Topology/MetricSpace/ProperSpace/Lemmas.lean
+index f3eed1c8..41f89df9 100644
+--- a/Mathlib/Topology/MetricSpace/ProperSpace/Lemmas.lean
++++ b/Mathlib/Topology/MetricSpace/ProperSpace/Lemmas.lean
+@@ -57,8 +57,9 @@ theorem Metric.exists_isLocalMin_mem_ball [TopologicalSpace β]
+     (hf : ContinuousOn f (closedBall a r)) (hz : z ∈ closedBall a r)
+     (hf1 : ∀ z' ∈ sphere a r, f z < f z') : ∃ z ∈ ball a r, IsLocalMin f z := by
+   simp_rw [← closedBall_sdiff_ball] at hf1
+-  exact (isCompact_closedBall a r).exists_isLocalMin_mem_open ball_subset_closedBall hf hz hf1
+-    isOpen_ball
++  exact (isCompact_closedBall a r).exists_isLocalMin_mem_of_nhdsSet
++    (subset_interior_iff_mem_nhdsSet.1 <| interior_maximal ball_subset_closedBall isOpen_ball)
++    hf hz hf1
+ 
+ @[fun_prop]
+ lemma isProperMap_dist (x : α) : IsProperMap (dist x) :=
+diff --git a/Mathlib/Topology/Order/Compact.lean b/Mathlib/Topology/Order/Compact.lean
+index 8e1982cb..a72dd1a1 100644
+--- a/Mathlib/Topology/Order/Compact.lean
++++ b/Mathlib/Topology/Order/Compact.lean
+@@ -441,18 +441,17 @@ theorem IsCompact.exists_isMaxOn_mem_subset [ClosedIciTopology α] {f : β → 
+   let ⟨x, hxt, hfx⟩ := ht.exists_isMaxOn ⟨z, hz⟩ hf
+   ⟨x, by_contra fun hxs => (hfz x ⟨hxt, hxs⟩).not_ge (hfx hz), hfx⟩
+ 
+--- TODO: we could assume `t ∈ 𝓝ˢ s` (a.k.a. `s ⊆ interior t`) instead of `s ⊆ t` and `IsOpen s`.
+-theorem IsCompact.exists_isLocalMin_mem_open [ClosedIicTopology α] {f : β → α} {s t : Set β}
+-    {z : β} (ht : IsCompact t) (hst : s ⊆ t) (hf : ContinuousOn f t) (hz : z ∈ t)
+-    (hfz : ∀ z' ∈ t \ s, f z < f z') (hs : IsOpen s) : ∃ x ∈ s, IsLocalMin f x :=
++theorem IsCompact.exists_isLocalMin_mem_of_nhdsSet [ClosedIicTopology α] {f : β → α} {s t : Set β}
++    {z : β} (ht : IsCompact t) (hst : t ∈ 𝓝ˢ s) (hf : ContinuousOn f t) (hz : z ∈ t)
++    (hfz : ∀ z' ∈ t \ s, f z < f z') : ∃ x ∈ s, IsLocalMin f x :=
+   let ⟨x, hxs, h⟩ := ht.exists_isMinOn_mem_subset hf hz hfz
+-  ⟨x, hxs, h.isLocalMin <| mem_nhds_iff.2 ⟨s, hst, hs, hxs⟩⟩
++  ⟨x, hxs, h.isLocalMin <| mem_nhdsSet_iff_forall.1 hst x hxs⟩
+ 
+-theorem IsCompact.exists_isLocalMax_mem_open [ClosedIciTopology α] {f : β → α} {s t : Set β}
+-    {z : β} (ht : IsCompact t) (hst : s ⊆ t) (hf : ContinuousOn f t) (hz : z ∈ t)
+-    (hfz : ∀ z' ∈ t \ s, f z' < f z) (hs : IsOpen s) : ∃ x ∈ s, IsLocalMax f x :=
++theorem IsCompact.exists_isLocalMax_mem_of_nhdsSet [ClosedIciTopology α] {f : β → α} {s t : Set β}
++    {z : β} (ht : IsCompact t) (hst : t ∈ 𝓝ˢ s) (hf : ContinuousOn f t) (hz : z ∈ t)
++    (hfz : ∀ z' ∈ t \ s, f z' < f z) : ∃ x ∈ s, IsLocalMax f x :=
+   let ⟨x, hxs, h⟩ := ht.exists_isMaxOn_mem_subset hf hz hfz
+-  ⟨x, hxs, h.isLocalMax <| mem_nhds_iff.2 ⟨s, hst, hs, hxs⟩⟩
++  ⟨x, hxs, h.isLocalMax <| mem_nhdsSet_iff_forall.1 hst x hxs⟩
+ 
+ end ExistsExtr
+ 

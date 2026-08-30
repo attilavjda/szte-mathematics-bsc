@@ -1,0 +1,27 @@
+diff --git a/Mathlib/Algebra/Group/EvenFunction.lean b/Mathlib/Algebra/Group/EvenFunction.lean
+index fac96be0..04ead684 100644
+--- a/Mathlib/Algebra/Group/EvenFunction.lean
++++ b/Mathlib/Algebra/Group/EvenFunction.lean
+@@ -79,6 +79,22 @@ lemma Odd.add [SubtractionCommMonoid β] {f g : α → β} (hf : f.Odd) (hg : g.
+   intro a
+   simp only [hf a, hg a, Pi.add_apply, neg_add]
+ 
++lemma Even.neg [Neg β] {f : α → β} (hf : f.Even) : (-f).Even := by
++  intro a
++  simp only [Pi.neg_apply, hf a]
++
++lemma Odd.neg [InvolutiveNeg β] {f : α → β} (hf : f.Odd) : (-f).Odd := by
++  intro a
++  simp only [Pi.neg_apply, hf a]
++
++lemma Even.sub [Sub β] {f g : α → β} (hf : f.Even) (hg : g.Even) : (f - g).Even := by
++  intro a
++  simp only [hf a, hg a, Pi.sub_apply]
++
++lemma Odd.sub [SubtractionCommMonoid β] {f g : α → β} (hf : f.Odd) (hg : g.Odd) : (f - g).Odd := by
++  intro a
++  simp only [hf a, hg a, Pi.sub_apply, neg_sub_neg, neg_sub]
++
+ section smul
+ 
+ variable {γ : Type*} {f : α → β} {g : α → γ}

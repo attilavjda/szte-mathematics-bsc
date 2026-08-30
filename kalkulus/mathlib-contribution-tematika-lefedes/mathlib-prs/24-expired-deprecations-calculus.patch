@@ -1,0 +1,284 @@
+diff --git a/Mathlib/Analysis/Calculus/Implicit.lean b/Mathlib/Analysis/Calculus/Implicit.lean
+index 5ef62b1..5eec1e8 100644
+--- a/Mathlib/Analysis/Calculus/Implicit.lean
++++ b/Mathlib/Analysis/Calculus/Implicit.lean
+@@ -151,9 +151,6 @@ complementary subspaces of `E`, then `x ↦ (f x, g x)` defines an open partial
+ def toOpenPartialHomeomorph : OpenPartialHomeomorph E (F × G) :=
+   φ.hasStrictFDerivAt.toOpenPartialHomeomorph _
+ 
+-@[deprecated (since := "2025-08-29")] noncomputable
+-  alias toPartialHomeomorph := toOpenPartialHomeomorph
+-
+ /-- Implicit function theorem. If `f : E → F` and `g : E → G` are two maps strictly differentiable
+ at `a`, their derivatives `f'`, `g'` are surjective, and the kernels of these derivatives are
+ complementary subspaces of `E`, then `implicitFunction` is the unique (germ of a) map
+@@ -168,28 +165,17 @@ lemma implicitFunction_apply {x : F} {y : G} :
+ theorem toOpenPartialHomeomorph_coe : ⇑φ.toOpenPartialHomeomorph = φ.prodFun :=
+   rfl
+ 
+-@[deprecated (since := "2025-08-29")] alias toPartialHomeomorph_coe := toOpenPartialHomeomorph_coe
+-
+ theorem toOpenPartialHomeomorph_apply (x : E) :
+     φ.toOpenPartialHomeomorph x = (φ.leftFun x, φ.rightFun x) :=
+   rfl
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  toPartialHomeomorph_apply := toOpenPartialHomeomorph_apply
+-
+ theorem pt_mem_toOpenPartialHomeomorph_source : φ.pt ∈ φ.toOpenPartialHomeomorph.source :=
+   φ.hasStrictFDerivAt.mem_toOpenPartialHomeomorph_source
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  pt_mem_toPartialHomeomorph_source := pt_mem_toOpenPartialHomeomorph_source
+-
+ theorem map_pt_mem_toOpenPartialHomeomorph_target :
+     (φ.leftFun φ.pt, φ.rightFun φ.pt) ∈ φ.toOpenPartialHomeomorph.target :=
+   φ.toOpenPartialHomeomorph.map_source <| φ.pt_mem_toOpenPartialHomeomorph_source
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  map_pt_mem_toPartialHomeomorph_target := map_pt_mem_toOpenPartialHomeomorph_target
+-
+ theorem prod_map_implicitFunction :
+     ∀ᶠ p : F × G in 𝓝 (φ.prodFun φ.pt), φ.prodFun (φ.implicitFunction p.1 p.2) = p :=
+   φ.hasStrictFDerivAt.eventually_right_inverse.mono fun ⟨_, _⟩ h => h
+@@ -332,9 +318,6 @@ def implicitToOpenPartialHomeomorphOfComplemented (hf : HasStrictFDerivAt f f' a
+     OpenPartialHomeomorph E (F × f'.ker) :=
+   (implicitFunctionDataOfComplemented f f' hf hf' hker).toOpenPartialHomeomorph
+ 
+-@[deprecated (since := "2025-08-29")] noncomputable alias
+-  implicitToPartialHomeomorphOfComplemented := implicitToOpenPartialHomeomorphOfComplemented
+-
+ /-- Implicit function `g` defined by `f (g z y) = z`. -/
+ def implicitFunctionOfComplemented (hf : HasStrictFDerivAt f f' a) (hf' : f'.range = ⊤)
+     (hker : f'.ker.ClosedComplemented) : F → f'.ker → E :=
+@@ -348,18 +331,12 @@ theorem implicitToOpenPartialHomeomorphOfComplemented_fst (hf : HasStrictFDerivA
+     (hf.implicitToOpenPartialHomeomorphOfComplemented f f' hf' hker x).fst = f x :=
+   rfl
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  implicitToPartialHomeomorphOfComplemented_fst := implicitToOpenPartialHomeomorphOfComplemented_fst
+-
+ theorem implicitToOpenPartialHomeomorphOfComplemented_apply (hf : HasStrictFDerivAt f f' a)
+     (hf' : f'.range = ⊤) (hker : f'.ker.ClosedComplemented) (y : E) :
+     hf.implicitToOpenPartialHomeomorphOfComplemented f f' hf' hker y =
+       (f y, Classical.choose hker (y - a)) :=
+   rfl
+ 
+-@[deprecated (since := "2025-08-29")] alias implicitToPartialHomeomorphOfComplemented_apply :=
+-  implicitToOpenPartialHomeomorphOfComplemented_apply
+-
+ @[simp]
+ theorem implicitToOpenPartialHomeomorphOfComplemented_apply_ker (hf : HasStrictFDerivAt f f' a)
+     (hf' : f'.range = ⊤) (hker : f'.ker.ClosedComplemented) (y : f'.ker) :
+@@ -367,26 +344,17 @@ theorem implicitToOpenPartialHomeomorphOfComplemented_apply_ker (hf : HasStrictF
+   simp only [implicitToOpenPartialHomeomorphOfComplemented_apply, add_sub_cancel_right,
+     Classical.choose_spec hker]
+ 
+-@[deprecated (since := "2025-08-29")] alias implicitToPartialHomeomorphOfComplemented_apply_ker :=
+-  implicitToOpenPartialHomeomorphOfComplemented_apply_ker
+-
+ @[simp]
+ theorem implicitToOpenPartialHomeomorphOfComplemented_self (hf : HasStrictFDerivAt f f' a)
+     (hf' : f'.range = ⊤) (hker : f'.ker.ClosedComplemented) :
+     hf.implicitToOpenPartialHomeomorphOfComplemented f f' hf' hker a = (f a, 0) := by
+   simp [hf.implicitToOpenPartialHomeomorphOfComplemented_apply]
+ 
+-@[deprecated (since := "2025-08-29")] alias implicitToPartialHomeomorphOfComplemented_self :=
+-  implicitToOpenPartialHomeomorphOfComplemented_self
+-
+ theorem mem_implicitToOpenPartialHomeomorphOfComplemented_source (hf : HasStrictFDerivAt f f' a)
+     (hf' : f'.range = ⊤) (hker : f'.ker.ClosedComplemented) :
+     a ∈ (hf.implicitToOpenPartialHomeomorphOfComplemented f f' hf' hker).source :=
+   ImplicitFunctionData.pt_mem_toOpenPartialHomeomorph_source _
+ 
+-@[deprecated (since := "2025-08-29")] alias mem_implicitToPartialHomeomorphOfComplemented_source :=
+-   mem_implicitToOpenPartialHomeomorphOfComplemented_source
+-
+ theorem mem_implicitToOpenPartialHomeomorphOfComplemented_target (hf : HasStrictFDerivAt f f' a)
+     (hf' : f'.range = ⊤) (hker : f'.ker.ClosedComplemented) :
+     (f a, (0 : f'.ker)) ∈
+@@ -395,9 +363,6 @@ theorem mem_implicitToOpenPartialHomeomorphOfComplemented_target (hf : HasStrict
+     (hf.implicitToOpenPartialHomeomorphOfComplemented f f' hf' hker).map_source <|
+       hf.mem_implicitToOpenPartialHomeomorphOfComplemented_source hf' hker
+ 
+-@[deprecated (since := "2025-08-29")] alias mem_implicitToPartialHomeomorphOfComplemented_target :=
+-   mem_implicitToOpenPartialHomeomorphOfComplemented_target
+-
+ /-- `HasStrictFDerivAt.implicitFunctionOfComplemented` sends `(z, y)` to a point in `f ⁻¹' z`. -/
+ theorem map_implicitFunctionOfComplemented_eq (hf : HasStrictFDerivAt f f' a) (hf' : f'.range = ⊤)
+     (hker : f'.ker.ClosedComplemented) :
+@@ -473,9 +438,6 @@ def implicitToOpenPartialHomeomorph (hf : HasStrictFDerivAt f f' a) (hf' : f'.ra
+   hf.implicitToOpenPartialHomeomorphOfComplemented f f' hf'
+     f'.ker_closedComplemented_of_finiteDimensional_range
+ 
+-@[deprecated (since := "2025-08-29")] noncomputable alias
+-  implicitToPartialHomeomorph := implicitToOpenPartialHomeomorph
+-
+ /-- Implicit function `g` defined by `f (g z y) = z`. -/
+ def implicitFunction (hf : HasStrictFDerivAt f f' a) (hf' : f'.range = ⊤) : F → f'.ker → E :=
+   Function.curry <| (hf.implicitToOpenPartialHomeomorph f f' hf').symm
+@@ -487,9 +449,6 @@ theorem implicitToOpenPartialHomeomorph_fst (hf : HasStrictFDerivAt f f' a) (hf'
+     (x : E) : (hf.implicitToOpenPartialHomeomorph f f' hf' x).fst = f x :=
+   rfl
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  implicitToPartialHomeomorph_fst := implicitToOpenPartialHomeomorph_fst
+-
+ @[simp]
+ theorem implicitToOpenPartialHomeomorph_apply_ker (hf : HasStrictFDerivAt f f' a)
+     (hf' : f'.range = ⊤) (y : f'.ker) :
+@@ -497,35 +456,23 @@ theorem implicitToOpenPartialHomeomorph_apply_ker (hf : HasStrictFDerivAt f f' a
+   haveI := FiniteDimensional.complete 𝕜 F
+   implicitToOpenPartialHomeomorphOfComplemented_apply_ker ..
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  implicitToPartialHomeomorph_apply_ker := implicitToOpenPartialHomeomorph_apply_ker
+-
+ @[simp]
+ theorem implicitToOpenPartialHomeomorph_self (hf : HasStrictFDerivAt f f' a) (hf' : f'.range = ⊤) :
+     hf.implicitToOpenPartialHomeomorph f f' hf' a = (f a, 0) :=
+   haveI := FiniteDimensional.complete 𝕜 F
+   implicitToOpenPartialHomeomorphOfComplemented_self ..
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  implicitToPartialHomeomorph_self := implicitToOpenPartialHomeomorph_self
+-
+ theorem mem_implicitToOpenPartialHomeomorph_source (hf : HasStrictFDerivAt f f' a)
+     (hf' : f'.range = ⊤) : a ∈ (hf.implicitToOpenPartialHomeomorph f f' hf').source :=
+   haveI := FiniteDimensional.complete 𝕜 F
+   ImplicitFunctionData.pt_mem_toOpenPartialHomeomorph_source _
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  mem_implicitToPartialHomeomorph_source := mem_implicitToOpenPartialHomeomorph_source
+-
+ theorem mem_implicitToOpenPartialHomeomorph_target (hf : HasStrictFDerivAt f f' a)
+     (hf' : f'.range = ⊤) :
+     (f a, (0 : f'.ker)) ∈ (hf.implicitToOpenPartialHomeomorph f f' hf').target :=
+   haveI := FiniteDimensional.complete 𝕜 F
+   mem_implicitToOpenPartialHomeomorphOfComplemented_target ..
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  mem_implicitToPartialHomeomorph_target := mem_implicitToOpenPartialHomeomorph_target
+-
+ 
+ theorem tendsto_implicitFunction (hf : HasStrictFDerivAt f f' a) (hf' : f'.range = ⊤) {α : Type*}
+     {l : Filter α} {g₁ : α → F} {g₂ : α → f'.ker} (h₁ : Tendsto g₁ l (𝓝 <| f a))
+diff --git a/Mathlib/Analysis/Calculus/InverseFunctionTheorem/ApproximatesLinearOn.lean b/Mathlib/Analysis/Calculus/InverseFunctionTheorem/ApproximatesLinearOn.lean
+index d35d472..14c3abb 100644
+--- a/Mathlib/Analysis/Calculus/InverseFunctionTheorem/ApproximatesLinearOn.lean
++++ b/Mathlib/Analysis/Calculus/InverseFunctionTheorem/ApproximatesLinearOn.lean
+@@ -398,36 +398,24 @@ def toOpenPartialHomeomorph (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s
+   continuousOn_toFun := hf.continuousOn
+   continuousOn_invFun := hf.inverse_continuousOn hc
+ 
+-@[deprecated (since := "2025-08-29")] noncomputable alias
+-  toPartialHomeomorph := toOpenPartialHomeomorph
+-
+ @[simp]
+ theorem toOpenPartialHomeomorph_coe (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c)
+     (hc : Subsingleton E ∨ c < N⁻¹) (hs : IsOpen s) :
+     (hf.toOpenPartialHomeomorph f s hc hs : E → F) = f :=
+   rfl
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  toPartialHomeomorph_coe := toOpenPartialHomeomorph_coe
+-
+ @[simp]
+ theorem toOpenPartialHomeomorph_source (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c)
+     (hc : Subsingleton E ∨ c < N⁻¹) (hs : IsOpen s) :
+     (hf.toOpenPartialHomeomorph f s hc hs).source = s :=
+   rfl
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  toPartialHomeomorph_source := toOpenPartialHomeomorph_source
+-
+ @[simp]
+ theorem toOpenPartialHomeomorph_target (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c)
+     (hc : Subsingleton E ∨ c < N⁻¹) (hs : IsOpen s) :
+     (hf.toOpenPartialHomeomorph f s hc hs).target = f '' s :=
+   rfl
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  toPartialHomeomorph_target := toOpenPartialHomeomorph_target
+-
+ /-- A function `f` that approximates a linear equivalence on the whole space is a homeomorphism. -/
+ def toHomeomorph (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) univ c)
+     (hc : Subsingleton E ∨ c < N⁻¹) : E ≃ₜ F := by
+diff --git a/Mathlib/Analysis/Calculus/InverseFunctionTheorem/ContDiff.lean b/Mathlib/Analysis/Calculus/InverseFunctionTheorem/ContDiff.lean
+index 5889826..8730360 100644
+--- a/Mathlib/Analysis/Calculus/InverseFunctionTheorem/ContDiff.lean
++++ b/Mathlib/Analysis/Calculus/InverseFunctionTheorem/ContDiff.lean
+@@ -32,9 +32,6 @@ def toOpenPartialHomeomorph (hf : ContDiffAt 𝕂 n f a) (hf' : HasFDerivAt f (f
+     (hn : n ≠ 0) : OpenPartialHomeomorph E F :=
+   (hf.hasStrictFDerivAt' hf' hn).toOpenPartialHomeomorph f
+ 
+-@[deprecated (since := "2025-08-29")] noncomputable alias
+-  toPartialHomeomorph := toOpenPartialHomeomorph
+-
+ variable {f}
+ 
+ @[simp]
+@@ -43,25 +40,16 @@ theorem toOpenPartialHomeomorph_coe (hf : ContDiffAt 𝕂 n f a)
+     (hf.toOpenPartialHomeomorph f hf' hn : E → F) = f :=
+   rfl
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  toPartialHomeomorph_coe := toOpenPartialHomeomorph_coe
+-
+ theorem mem_toOpenPartialHomeomorph_source (hf : ContDiffAt 𝕂 n f a)
+     (hf' : HasFDerivAt f (f' : E →L[𝕂] F) a) (hn : n ≠ 0) :
+     a ∈ (hf.toOpenPartialHomeomorph f hf' hn).source :=
+   (hf.hasStrictFDerivAt' hf' hn).mem_toOpenPartialHomeomorph_source
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  mem_toPartialHomeomorph_source := mem_toOpenPartialHomeomorph_source
+-
+ theorem image_mem_toOpenPartialHomeomorph_target (hf : ContDiffAt 𝕂 n f a)
+     (hf' : HasFDerivAt f (f' : E →L[𝕂] F) a) (hn : n ≠ 0) :
+     f a ∈ (hf.toOpenPartialHomeomorph f hf' hn).target :=
+   (hf.hasStrictFDerivAt' hf' hn).image_mem_toOpenPartialHomeomorph_target
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  image_mem_toPartialHomeomorph_target := image_mem_toOpenPartialHomeomorph_target
+-
+ /-- Given a `ContDiff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible derivative
+ at `a`, returns a function that is locally inverse to `f`. -/
+ def localInverse (hf : ContDiffAt 𝕂 n f a) (hf' : HasFDerivAt f (f' : E →L[𝕂] F) a)
+diff --git a/Mathlib/Analysis/Calculus/InverseFunctionTheorem/FDeriv.lean b/Mathlib/Analysis/Calculus/InverseFunctionTheorem/FDeriv.lean
+index 73cf6cd..241b167 100644
+--- a/Mathlib/Analysis/Calculus/InverseFunctionTheorem/FDeriv.lean
++++ b/Mathlib/Analysis/Calculus/InverseFunctionTheorem/FDeriv.lean
+@@ -120,9 +120,6 @@ def toOpenPartialHomeomorph (hf : HasStrictFDerivAt f (f' : E →L[𝕜] F) a) :
+       NNReal.half_lt_self <| ne_of_gt <| inv_pos.2 hf')
+     (Classical.choose_spec hf.approximates_deriv_on_open_nhds).2.1
+ 
+-@[deprecated (since := "2025-08-29")] noncomputable alias
+-  toPartialHomeomorph := toOpenPartialHomeomorph
+-
+ variable {f}
+ 
+ @[simp]
+@@ -130,23 +127,14 @@ theorem toOpenPartialHomeomorph_coe (hf : HasStrictFDerivAt f (f' : E →L[𝕜]
+     (hf.toOpenPartialHomeomorph f : E → F) = f :=
+   rfl
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  toPartialHomeomorph_coe := toOpenPartialHomeomorph_coe
+-
+ theorem mem_toOpenPartialHomeomorph_source (hf : HasStrictFDerivAt f (f' : E →L[𝕜] F) a) :
+     a ∈ (hf.toOpenPartialHomeomorph f).source :=
+   (Classical.choose_spec hf.approximates_deriv_on_open_nhds).1
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  mem_toPartialHomeomorph_source := mem_toOpenPartialHomeomorph_source
+-
+ theorem image_mem_toOpenPartialHomeomorph_target (hf : HasStrictFDerivAt f (f' : E →L[𝕜] F) a) :
+     f a ∈ (hf.toOpenPartialHomeomorph f).target :=
+   (hf.toOpenPartialHomeomorph f).map_source hf.mem_toOpenPartialHomeomorph_source
+ 
+-@[deprecated (since := "2025-08-29")] alias
+-  image_mem_toPartialHomeomorph_target := image_mem_toOpenPartialHomeomorph_target
+-
+ 
+ theorem map_nhds_eq_of_equiv (hf : HasStrictFDerivAt f (f' : E →L[𝕜] F) a) :
+     map f (𝓝 a) = 𝓝 (f a) :=

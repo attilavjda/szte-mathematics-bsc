@@ -1,0 +1,23 @@
+diff --git a/Mathlib/Analysis/MeanInequalities.lean b/Mathlib/Analysis/MeanInequalities.lean
+index 353c9e6..08a3c4e 100644
+--- a/Mathlib/Analysis/MeanInequalities.lean
++++ b/Mathlib/Analysis/MeanInequalities.lean
+@@ -868,8 +868,6 @@ namespace ENNReal
+ 
+ variable (f g : ι → ℝ≥0∞) {p q : ℝ}
+ 
+--- TODO: fix the non-terminal simp on the last line
+-set_option linter.flexible false in
+ /-- **Hölder inequality**: the scalar product of two functions is bounded by the product of their
+ `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
+ with `ℝ≥0∞`-valued functions. -/
+@@ -888,7 +886,8 @@ theorem inner_le_Lp_mul_Lq (hpq : p.HolderConjugate q) :
+       ENNReal.sum_eq_top, not_or] using H'
+   have := ENNReal.coe_le_coe.2 (@NNReal.inner_le_Lp_mul_Lq _ s (fun i => ENNReal.toNNReal (f i))
+     (fun i => ENNReal.toNNReal (g i)) _ _ hpq)
+-  simp [ENNReal.coe_rpow_of_nonneg, hpq.pos.le, hpq.symm.pos.le] at this
++  simp only [coe_finset_sum, coe_mul, one_div, inv_nonneg, hpq.pos.le, coe_rpow_of_nonneg,
++    hpq.symm.pos.le] at this
+   convert this using 1 <;> [skip; congr 2] <;> [skip; skip; simp; skip; simp] <;>
+     · refine Finset.sum_congr rfl fun i hi => ?_
+       simp [H'.1 i hi, H'.2 i hi, -WithZero.coe_mul]

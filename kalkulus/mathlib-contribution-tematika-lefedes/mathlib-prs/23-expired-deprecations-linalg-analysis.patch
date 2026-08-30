@@ -1,0 +1,53 @@
+diff --git a/Mathlib/Analysis/InnerProductSpace/Positive.lean b/Mathlib/Analysis/InnerProductSpace/Positive.lean
+index 7006c49..1804b65 100644
+--- a/Mathlib/Analysis/InnerProductSpace/Positive.lean
++++ b/Mathlib/Analysis/InnerProductSpace/Positive.lean
+@@ -232,10 +232,6 @@ theorem IsSymmetricProjection.isPositive {p : E →ₗ[𝕜] E} (hp : p.IsSymmet
+ @[deprecated (since := "2025-10-17")] alias IsPositive.of_isSymmetricProjection :=
+   IsSymmetricProjection.isPositive
+ 
+-/-- A star projection operator is positive. -/
+-@[deprecated (since := "2025-08-19")]
+-alias IsPositive.of_isStarProjection := IsSymmetricProjection.isPositive
+-
+ theorem IsSymmetricProjection.le_iff_range_le_range {p q : E →ₗ[𝕜] E}
+     (hp : p.IsSymmetricProjection) (hq : q.IsSymmetricProjection) : p ≤ q ↔ range p ≤ range q := by
+   refine ⟨fun ⟨h1, h2⟩ a ha ↦ ?_, fun hpq ↦ (hp.sub_of_range_le_range hq hpq).isPositive⟩
+diff --git a/Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean b/Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean
+index 0685792..4e69baa 100644
+--- a/Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean
++++ b/Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean
+@@ -87,9 +87,6 @@ lemma tendsto_rpow_atBot_of_base_gt_one (b : ℝ) (hb : 1 < b) :
+   refine tendsto_exp_atBot.comp <| (tendsto_const_mul_atBot_of_pos ?_).mpr tendsto_id
+   exact (log_pos_iff (by positivity)).mpr <| by aesop
+ 
+-@[deprecated (since := "2025-08-24")]
+-alias tendsto_rpow_atTop_of_base_gt_one := tendsto_rpow_atBot_of_base_gt_one
+-
+ /-- The function `x ^ (a / (b * x + c))` tends to `1` at `+∞`, for any real numbers `a`, `b`, and
+ `c` such that `b` is nonzero. -/
+ theorem tendsto_rpow_div_mul_add (a b c : ℝ) (hb : 0 ≠ b) :
+diff --git a/Mathlib/LinearAlgebra/Span/Defs.lean b/Mathlib/LinearAlgebra/Span/Defs.lean
+index 2a4fd34..dc79b8f 100644
+--- a/Mathlib/LinearAlgebra/Span/Defs.lean
++++ b/Mathlib/LinearAlgebra/Span/Defs.lean
+@@ -226,9 +226,6 @@ theorem span_nat_eq_addSubmonoidClosure (s : Set M) :
+   rw [span_le]
+   exact AddSubmonoid.subset_closure
+ 
+-@[deprecated (since := "2025-08-20")]
+-alias span_nat_eq_addSubmonoid_closure := span_nat_eq_addSubmonoidClosure
+-
+ @[simp]
+ theorem span_nat_eq (s : AddSubmonoid M) : (span ℕ (s : Set M)).toAddSubmonoid = s := by
+   rw [span_nat_eq_addSubmonoidClosure, s.closure_eq]
+@@ -240,9 +237,6 @@ theorem span_int_eq_addSubgroupClosure {M : Type*} [AddCommGroup M] (s : Set M)
+       span_induction (fun _ hx => AddSubgroup.subset_closure hx) (AddSubgroup.zero_mem _)
+         (fun _ _ _ _ => AddSubgroup.add_mem _) (fun _ _ _ _ => AddSubgroup.zsmul_mem _ ‹_› _) hx
+ 
+-@[deprecated (since := "2025-08-20")]
+-alias span_int_eq_addSubgroup_closure := span_int_eq_addSubgroupClosure
+-
+ @[simp]
+ theorem span_int_eq {M : Type*} [AddCommGroup M] (s : AddSubgroup M) :
+     (span ℤ (s : Set M)).toAddSubgroup = s := by rw [span_int_eq_addSubgroupClosure, s.closure_eq]

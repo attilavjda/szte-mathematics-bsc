@@ -1,0 +1,28 @@
+diff --git a/Mathlib/Order/SuccPred/Archimedean.lean b/Mathlib/Order/SuccPred/Archimedean.lean
+index 22890a86..80e6b8d9 100644
+--- a/Mathlib/Order/SuccPred/Archimedean.lean
++++ b/Mathlib/Order/SuccPred/Archimedean.lean
+@@ -150,12 +150,6 @@ variable [LinearOrder α]
+ section SuccOrder
+ variable [SuccOrder α]
+ 
+-@[deprecated (since := "2026-02-05")] alias succ_max := Order.succ_max
+-@[deprecated (since := "2026-02-05")] alias succ_min := Order.succ_min
+-
+-@[deprecated (since := "2026-02-05")] alias pred_max := Order.pred_max
+-@[deprecated (since := "2026-02-05")] alias pred_min := Order.pred_min
+-
+ variable [IsSuccArchimedean α] {a b : α}
+ 
+ @[to_dual]
+@@ -193,10 +187,6 @@ lemma StrictAnti.not_bddAbove_range_of_isSuccArchimedean [NoMinOrder α] [SuccOr
+     [IsSuccArchimedean β] (hf : StrictAnti f) : ¬ BddAbove (Set.range f) :=
+   hf.dual_right.not_bddBelow_range_of_isPredArchimedean
+ 
+-@[deprecated (since := "2026-02-05")]
+-alias StrictMono.not_bddBelow_range_of_isSuccArchimedean :=
+-  StrictMono.not_bddAbove_range_of_isSuccArchimedean
+-
+ end bdd_range
+ 
+ section IsWellFounded

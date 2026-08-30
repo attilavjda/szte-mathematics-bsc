@@ -1,0 +1,405 @@
+diff --git a/Mathlib/Analysis/Convex/Side.lean b/Mathlib/Analysis/Convex/Side.lean
+index ae0a5224ba..e8d67911e0 100644
+--- a/Mathlib/Analysis/Convex/Side.lean
++++ b/Mathlib/Analysis/Convex/Side.lean
+@@ -58,6 +58,7 @@ def WOppSide (s : AffineSubspace R P) (x y : P) : Prop :=
+ def SOppSide (s : AffineSubspace R P) (x y : P) : Prop :=
+   s.WOppSide x y ∧ x ∉ s ∧ y ∉ s
+ 
++omit [IsStrictOrderedRing R] in
+ theorem WSameSide.map {s : AffineSubspace R P} {x y : P} (h : s.WSameSide x y) (f : P →ᵃ[R] P') :
+     (s.map f).WSameSide (f x) (f y) := by
+   rcases h with ⟨p₁, hp₁, p₂, hp₂, h⟩
+@@ -65,6 +66,7 @@ theorem WSameSide.map {s : AffineSubspace R P} {x y : P} (h : s.WSameSide x y) (
+   simp_rw [← linearMap_vsub]
+   exact h.map f.linear
+ 
++omit [IsStrictOrderedRing R] in
+ theorem _root_.Function.Injective.wSameSide_map_iff {s : AffineSubspace R P} {x y : P}
+     {f : P →ᵃ[R] P'} (hf : Function.Injective f) :
+     (s.map f).WSameSide (f x) (f y) ↔ s.WSameSide x y := by
+@@ -77,21 +79,25 @@ theorem _root_.Function.Injective.wSameSide_map_iff {s : AffineSubspace R P} {x
+   simp_rw [← linearMap_vsub, (f.linear_injective_iff.2 hf).sameRay_map_iff] at h
+   exact h
+ 
++omit [IsStrictOrderedRing R] in
+ theorem _root_.Function.Injective.sSameSide_map_iff {s : AffineSubspace R P} {x y : P}
+     {f : P →ᵃ[R] P'} (hf : Function.Injective f) :
+     (s.map f).SSameSide (f x) (f y) ↔ s.SSameSide x y := by
+   simp_rw [SSameSide, hf.wSameSide_map_iff, mem_map_iff_mem_of_injective hf]
+ 
++omit [IsStrictOrderedRing R] in
+ @[simp]
+ theorem _root_.AffineEquiv.wSameSide_map_iff {s : AffineSubspace R P} {x y : P} (f : P ≃ᵃ[R] P') :
+     (s.map ↑f).WSameSide (f x) (f y) ↔ s.WSameSide x y :=
+   (show Function.Injective f.toAffineMap from f.injective).wSameSide_map_iff
+ 
++omit [IsStrictOrderedRing R] in
+ @[simp]
+ theorem _root_.AffineEquiv.sSameSide_map_iff {s : AffineSubspace R P} {x y : P} (f : P ≃ᵃ[R] P') :
+     (s.map ↑f).SSameSide (f x) (f y) ↔ s.SSameSide x y :=
+   (show Function.Injective f.toAffineMap from f.injective).sSameSide_map_iff
+ 
++omit [IsStrictOrderedRing R] in
+ theorem WOppSide.map {s : AffineSubspace R P} {x y : P} (h : s.WOppSide x y) (f : P →ᵃ[R] P') :
+     (s.map f).WOppSide (f x) (f y) := by
+   rcases h with ⟨p₁, hp₁, p₂, hp₂, h⟩
+@@ -99,6 +105,7 @@ theorem WOppSide.map {s : AffineSubspace R P} {x y : P} (h : s.WOppSide x y) (f
+   simp_rw [← linearMap_vsub]
+   exact h.map f.linear
+ 
++omit [IsStrictOrderedRing R] in
+ theorem _root_.Function.Injective.wOppSide_map_iff {s : AffineSubspace R P} {x y : P}
+     {f : P →ᵃ[R] P'} (hf : Function.Injective f) :
+     (s.map f).WOppSide (f x) (f y) ↔ s.WOppSide x y := by
+@@ -111,68 +118,84 @@ theorem _root_.Function.Injective.wOppSide_map_iff {s : AffineSubspace R P} {x y
+   simp_rw [← linearMap_vsub, (f.linear_injective_iff.2 hf).sameRay_map_iff] at h
+   exact h
+ 
++omit [IsStrictOrderedRing R] in
+ theorem _root_.Function.Injective.sOppSide_map_iff {s : AffineSubspace R P} {x y : P}
+     {f : P →ᵃ[R] P'} (hf : Function.Injective f) :
+     (s.map f).SOppSide (f x) (f y) ↔ s.SOppSide x y := by
+   simp_rw [SOppSide, hf.wOppSide_map_iff, mem_map_iff_mem_of_injective hf]
+ 
++omit [IsStrictOrderedRing R] in
+ @[simp]
+ theorem _root_.AffineEquiv.wOppSide_map_iff {s : AffineSubspace R P} {x y : P} (f : P ≃ᵃ[R] P') :
+     (s.map ↑f).WOppSide (f x) (f y) ↔ s.WOppSide x y :=
+   (show Function.Injective f.toAffineMap from f.injective).wOppSide_map_iff
+ 
++omit [IsStrictOrderedRing R] in
+ @[simp]
+ theorem _root_.AffineEquiv.sOppSide_map_iff {s : AffineSubspace R P} {x y : P} (f : P ≃ᵃ[R] P') :
+     (s.map ↑f).SOppSide (f x) (f y) ↔ s.SOppSide x y :=
+   (show Function.Injective f.toAffineMap from f.injective).sOppSide_map_iff
+ 
++omit [IsStrictOrderedRing R] in
+ theorem WSameSide.nonempty {s : AffineSubspace R P} {x y : P} (h : s.WSameSide x y) :
+     (s : Set P).Nonempty :=
+   ⟨h.choose, h.choose_spec.left⟩
+ 
++omit [IsStrictOrderedRing R] in
+ theorem SSameSide.nonempty {s : AffineSubspace R P} {x y : P} (h : s.SSameSide x y) :
+     (s : Set P).Nonempty :=
+   ⟨h.1.choose, h.1.choose_spec.left⟩
+ 
++omit [IsStrictOrderedRing R] in
+ theorem WOppSide.nonempty {s : AffineSubspace R P} {x y : P} (h : s.WOppSide x y) :
+     (s : Set P).Nonempty :=
+   ⟨h.choose, h.choose_spec.left⟩
+ 
++omit [IsStrictOrderedRing R] in
+ theorem SOppSide.nonempty {s : AffineSubspace R P} {x y : P} (h : s.SOppSide x y) :
+     (s : Set P).Nonempty :=
+   ⟨h.1.choose, h.1.choose_spec.left⟩
+ 
++omit [IsStrictOrderedRing R] in
+ theorem SSameSide.wSameSide {s : AffineSubspace R P} {x y : P} (h : s.SSameSide x y) :
+     s.WSameSide x y :=
+   h.1
+ 
++omit [IsStrictOrderedRing R] in
+ theorem SSameSide.left_notMem {s : AffineSubspace R P} {x y : P} (h : s.SSameSide x y) : x ∉ s :=
+   h.2.1
+ 
++omit [IsStrictOrderedRing R] in
+ theorem SSameSide.right_notMem {s : AffineSubspace R P} {x y : P} (h : s.SSameSide x y) : y ∉ s :=
+   h.2.2
+ 
++omit [IsStrictOrderedRing R] in
+ theorem SOppSide.wOppSide {s : AffineSubspace R P} {x y : P} (h : s.SOppSide x y) :
+     s.WOppSide x y :=
+   h.1
+ 
++omit [IsStrictOrderedRing R] in
+ theorem SOppSide.left_notMem {s : AffineSubspace R P} {x y : P} (h : s.SOppSide x y) : x ∉ s :=
+   h.2.1
+ 
++omit [IsStrictOrderedRing R] in
+ theorem SOppSide.right_notMem {s : AffineSubspace R P} {x y : P} (h : s.SOppSide x y) : y ∉ s :=
+   h.2.2
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wSameSide_comm {s : AffineSubspace R P} {x y : P} : s.WSameSide x y ↔ s.WSameSide y x :=
+   ⟨fun ⟨p₁, hp₁, p₂, hp₂, h⟩ => ⟨p₂, hp₂, p₁, hp₁, h.symm⟩,
+     fun ⟨p₁, hp₁, p₂, hp₂, h⟩ => ⟨p₂, hp₂, p₁, hp₁, h.symm⟩⟩
+ 
+ alias ⟨WSameSide.symm, _⟩ := wSameSide_comm
+ 
++omit [IsStrictOrderedRing R] in
+ theorem sSameSide_comm {s : AffineSubspace R P} {x y : P} : s.SSameSide x y ↔ s.SSameSide y x := by
+   rw [SSameSide, SSameSide, wSameSide_comm, and_comm (b := x ∉ s)]
+ 
+ alias ⟨SSameSide.symm, _⟩ := sSameSide_comm
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wOppSide_comm {s : AffineSubspace R P} {x y : P} : s.WOppSide x y ↔ s.WOppSide y x := by
+   constructor
+   · rintro ⟨p₁, hp₁, p₂, hp₂, h⟩
+@@ -184,20 +207,25 @@ theorem wOppSide_comm {s : AffineSubspace R P} {x y : P} : s.WOppSide x y ↔ s.
+ 
+ alias ⟨WOppSide.symm, _⟩ := wOppSide_comm
+ 
++omit [IsStrictOrderedRing R] in
+ theorem sOppSide_comm {s : AffineSubspace R P} {x y : P} : s.SOppSide x y ↔ s.SOppSide y x := by
+   rw [SOppSide, SOppSide, wOppSide_comm, and_comm (b := x ∉ s)]
+ 
+ alias ⟨SOppSide.symm, _⟩ := sOppSide_comm
+ 
++omit [IsStrictOrderedRing R] in
+ theorem not_wSameSide_bot (x y : P) : ¬(⊥ : AffineSubspace R P).WSameSide x y :=
+   fun ⟨_, h, _⟩ => h.elim
+ 
++omit [IsStrictOrderedRing R] in
+ theorem not_sSameSide_bot (x y : P) : ¬(⊥ : AffineSubspace R P).SSameSide x y :=
+   fun h => not_wSameSide_bot x y h.wSameSide
+ 
++omit [IsStrictOrderedRing R] in
+ theorem not_wOppSide_bot (x y : P) : ¬(⊥ : AffineSubspace R P).WOppSide x y :=
+   fun ⟨_, h, _⟩ => h.elim
+ 
++omit [IsStrictOrderedRing R] in
+ theorem not_sOppSide_bot (x y : P) : ¬(⊥ : AffineSubspace R P).SOppSide x y :=
+   fun h => not_wOppSide_bot x y h.wOppSide
+ 
+@@ -210,26 +238,31 @@ theorem sSameSide_self_iff {s : AffineSubspace R P} {x : P} :
+     s.SSameSide x x ↔ (s : Set P).Nonempty ∧ x ∉ s :=
+   ⟨fun ⟨h, hx, _⟩ => ⟨wSameSide_self_iff.1 h, hx⟩, fun ⟨h, hx⟩ => ⟨wSameSide_self_iff.2 h, hx, hx⟩⟩
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wSameSide_of_left_mem {s : AffineSubspace R P} {x : P} (y : P) (hx : x ∈ s) :
+     s.WSameSide x y := by
+   refine ⟨x, hx, x, hx, ?_⟩
+   rw [vsub_self]
+   apply SameRay.zero_left
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wSameSide_of_right_mem {s : AffineSubspace R P} (x : P) {y : P} (hy : y ∈ s) :
+     s.WSameSide x y :=
+   (wSameSide_of_left_mem x hy).symm
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wOppSide_of_left_mem {s : AffineSubspace R P} {x : P} (y : P) (hx : x ∈ s) :
+     s.WOppSide x y := by
+   refine ⟨x, hx, x, hx, ?_⟩
+   rw [vsub_self]
+   apply SameRay.zero_left
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wOppSide_of_right_mem {s : AffineSubspace R P} (x : P) {y : P} (hy : y ∈ s) :
+     s.WOppSide x y :=
+   (wOppSide_of_left_mem x hy).symm
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wSameSide_vadd_left_iff {s : AffineSubspace R P} {x y : P} {v : V} (hv : v ∈ s.direction) :
+     s.WSameSide (v +ᵥ x) y ↔ s.WSameSide x y := by
+   constructor
+@@ -241,18 +274,22 @@ theorem wSameSide_vadd_left_iff {s : AffineSubspace R P} {x y : P} {v : V} (hv :
+     refine ⟨v +ᵥ p₁, AffineSubspace.vadd_mem_of_mem_direction hv hp₁, p₂, hp₂, ?_⟩
+     rwa [vadd_vsub_vadd_cancel_left]
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wSameSide_vadd_right_iff {s : AffineSubspace R P} {x y : P} {v : V} (hv : v ∈ s.direction) :
+     s.WSameSide x (v +ᵥ y) ↔ s.WSameSide x y := by
+   rw [wSameSide_comm, wSameSide_vadd_left_iff hv, wSameSide_comm]
+ 
++omit [IsStrictOrderedRing R] in
+ theorem sSameSide_vadd_left_iff {s : AffineSubspace R P} {x y : P} {v : V} (hv : v ∈ s.direction) :
+     s.SSameSide (v +ᵥ x) y ↔ s.SSameSide x y := by
+   rw [SSameSide, SSameSide, wSameSide_vadd_left_iff hv, vadd_mem_iff_mem_of_mem_direction hv]
+ 
++omit [IsStrictOrderedRing R] in
+ theorem sSameSide_vadd_right_iff {s : AffineSubspace R P} {x y : P} {v : V} (hv : v ∈ s.direction) :
+     s.SSameSide x (v +ᵥ y) ↔ s.SSameSide x y := by
+   rw [sSameSide_comm, sSameSide_vadd_left_iff hv, sSameSide_comm]
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wOppSide_vadd_left_iff {s : AffineSubspace R P} {x y : P} {v : V} (hv : v ∈ s.direction) :
+     s.WOppSide (v +ᵥ x) y ↔ s.WOppSide x y := by
+   constructor
+@@ -264,14 +301,17 @@ theorem wOppSide_vadd_left_iff {s : AffineSubspace R P} {x y : P} {v : V} (hv :
+     refine ⟨v +ᵥ p₁, AffineSubspace.vadd_mem_of_mem_direction hv hp₁, p₂, hp₂, ?_⟩
+     rwa [vadd_vsub_vadd_cancel_left]
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wOppSide_vadd_right_iff {s : AffineSubspace R P} {x y : P} {v : V} (hv : v ∈ s.direction) :
+     s.WOppSide x (v +ᵥ y) ↔ s.WOppSide x y := by
+   rw [wOppSide_comm, wOppSide_vadd_left_iff hv, wOppSide_comm]
+ 
++omit [IsStrictOrderedRing R] in
+ theorem sOppSide_vadd_left_iff {s : AffineSubspace R P} {x y : P} {v : V} (hv : v ∈ s.direction) :
+     s.SOppSide (v +ᵥ x) y ↔ s.SOppSide x y := by
+   rw [SOppSide, SOppSide, wOppSide_vadd_left_iff hv, vadd_mem_iff_mem_of_mem_direction hv]
+ 
++omit [IsStrictOrderedRing R] in
+ theorem sOppSide_vadd_right_iff {s : AffineSubspace R P} {x y : P} {v : V} (hv : v ∈ s.direction) :
+     s.SOppSide x (v +ᵥ y) ↔ s.SOppSide x y := by
+   rw [sOppSide_comm, sOppSide_vadd_left_iff hv, sOppSide_comm]
+@@ -406,6 +446,7 @@ theorem not_sOppSide_self (s : AffineSubspace R P) (x : P) : ¬s.SOppSide x x :=
+   rw [SOppSide]
+   simp
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wSameSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p₁ ∈ s) :
+     s.WSameSide x y ↔ x ∈ s ∨ ∃ p₂ ∈ s, SameRay R (x -ᵥ p₁) (y -ᵥ p₂) := by
+   constructor
+@@ -424,22 +465,26 @@ theorem wSameSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p
+     · exact wSameSide_of_left_mem y h'
+     · exact ⟨p₁, h, h₁, h₂, h₃⟩
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wSameSide_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : p₂ ∈ s) :
+     s.WSameSide x y ↔ y ∈ s ∨ ∃ p₁ ∈ s, SameRay R (x -ᵥ p₁) (y -ᵥ p₂) := by
+   rw [wSameSide_comm, wSameSide_iff_exists_left h]
+   simp_rw [SameRay.sameRay_comm]
+ 
++omit [IsStrictOrderedRing R] in
+ theorem sSameSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p₁ ∈ s) :
+     s.SSameSide x y ↔ x ∉ s ∧ y ∉ s ∧ ∃ p₂ ∈ s, SameRay R (x -ᵥ p₁) (y -ᵥ p₂) := by
+   rw [SSameSide, and_comm, wSameSide_iff_exists_left h, and_assoc, and_congr_right_iff]
+   intro hx
+   rw [or_iff_right hx]
+ 
++omit [IsStrictOrderedRing R] in
+ theorem sSameSide_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : p₂ ∈ s) :
+     s.SSameSide x y ↔ x ∉ s ∧ y ∉ s ∧ ∃ p₁ ∈ s, SameRay R (x -ᵥ p₁) (y -ᵥ p₂) := by
+   rw [sSameSide_comm, sSameSide_iff_exists_left h, ← and_assoc, and_comm (a := y ∉ s), and_assoc]
+   simp_rw [SameRay.sameRay_comm]
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wOppSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p₁ ∈ s) :
+     s.WOppSide x y ↔ x ∈ s ∨ ∃ p₂ ∈ s, SameRay R (x -ᵥ p₁) (p₂ -ᵥ y) := by
+   constructor
+@@ -458,6 +503,7 @@ theorem wOppSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p
+     · exact wOppSide_of_left_mem y h'
+     · exact ⟨p₁, h, h₁, h₂, h₃⟩
+ 
++omit [IsStrictOrderedRing R] in
+ theorem wOppSide_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : p₂ ∈ s) :
+     s.WOppSide x y ↔ y ∈ s ∨ ∃ p₁ ∈ s, SameRay R (x -ᵥ p₁) (p₂ -ᵥ y) := by
+   rw [wOppSide_comm, wOppSide_iff_exists_left h]
+@@ -471,12 +517,14 @@ theorem wOppSide_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : p
+     refine Or.inr ⟨p, hp, ?_⟩
+     rwa [SameRay.sameRay_comm, ← sameRay_neg_iff, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev]
+ 
++omit [IsStrictOrderedRing R] in
+ theorem sOppSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p₁ ∈ s) :
+     s.SOppSide x y ↔ x ∉ s ∧ y ∉ s ∧ ∃ p₂ ∈ s, SameRay R (x -ᵥ p₁) (p₂ -ᵥ y) := by
+   rw [SOppSide, and_comm, wOppSide_iff_exists_left h, and_assoc, and_congr_right_iff]
+   intro hx
+   rw [or_iff_right hx]
+ 
++omit [IsStrictOrderedRing R] in
+ theorem sOppSide_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : p₂ ∈ s) :
+     s.SOppSide x y ↔ x ∉ s ∧ y ∉ s ∧ ∃ p₁ ∈ s, SameRay R (x -ᵥ p₁) (p₂ -ᵥ y) := by
+   rw [SOppSide, and_comm, wOppSide_iff_exists_right h, and_assoc, and_congr_right_iff,
+diff --git a/Mathlib/LinearAlgebra/Ray.lean b/Mathlib/LinearAlgebra/Ray.lean
+index 9e85bdedf8..272341ea42 100644
+--- a/Mathlib/LinearAlgebra/Ray.lean
++++ b/Mathlib/LinearAlgebra/Ray.lean
+@@ -34,12 +34,10 @@ open Module
+ 
+ section StrictOrderedCommSemiring
+ 
+--- TODO: remove `[IsStrictOrderedRing R]` and `@[nolint unusedArguments]`.
+ /-- Two vectors are in the same ray if either one of them is zero or some positive multiples of them
+ are equal (in the typical case over a field, this means one of them is a nonnegative multiple of
+ the other). -/
+-@[nolint unusedArguments]
+-def SameRay (R : Type*) [CommSemiring R] [PartialOrder R] [IsStrictOrderedRing R]
++def SameRay (R : Type*) [CommSemiring R] [PartialOrder R]
+     {M : Type*} [AddCommMonoid M] [Module R M] (v₁ v₂ : M) : Prop :=
+   v₁ = 0 ∨ v₂ = 0 ∨ ∃ r₁ r₂ : R, 0 < r₁ ∧ 0 < r₂ ∧ r₁ • v₁ = r₂ • v₂
+ 
+@@ -77,19 +75,23 @@ namespace SameRay
+ 
+ variable {x y z : M}
+ 
++omit [IsStrictOrderedRing R] in
+ @[simp]
+ theorem zero_left (y : M) : SameRay R 0 y :=
+   Or.inl rfl
+ 
++omit [IsStrictOrderedRing R] in
+ @[simp]
+ theorem zero_right (x : M) : SameRay R x 0 :=
+   Or.inr <| Or.inl rfl
+ 
++omit [IsStrictOrderedRing R] in
+ @[nontriviality]
+ theorem of_subsingleton [Subsingleton M] (x y : M) : SameRay R x y := by
+   rw [Subsingleton.elim x 0]
+   exact zero_left _
+ 
++omit [IsStrictOrderedRing R] in
+ @[nontriviality]
+ theorem of_subsingleton' [Subsingleton R] (x y : M) : SameRay R x y :=
+   haveI := Module.subsingleton R M
+@@ -103,17 +105,20 @@ theorem refl (x : M) : SameRay R x x :=
+ protected theorem rfl : SameRay R x x :=
+   refl _
+ 
++omit [IsStrictOrderedRing R] in
+ /-- `SameRay` is symmetric. -/
+ @[symm]
+ theorem symm (h : SameRay R x y) : SameRay R y x :=
+   (or_left_comm.1 h).imp_right <| Or.imp_right fun ⟨r₁, r₂, h₁, h₂, h⟩ => ⟨r₂, r₁, h₂, h₁, h.symm⟩
+ 
++omit [IsStrictOrderedRing R] in
+ /-- If `x` and `y` are nonzero vectors on the same ray, then there exist positive numbers `r₁ r₂`
+ such that `r₁ • x = r₂ • y`. -/
+ theorem exists_pos (h : SameRay R x y) (hx : x ≠ 0) (hy : y ≠ 0) :
+     ∃ r₁ r₂ : R, 0 < r₁ ∧ 0 < r₂ ∧ r₁ • x = r₂ • y :=
+   (h.resolve_left hx).resolve_left hy
+ 
++omit [IsStrictOrderedRing R] in
+ theorem sameRay_comm : SameRay R x y ↔ SameRay R y x :=
+   ⟨SameRay.symm, SameRay.symm⟩
+ 
+@@ -170,12 +175,14 @@ theorem pos_smul_right (h : SameRay R x y) (ha : 0 < a) : SameRay R x (a • y)
+ theorem pos_smul_left (h : SameRay R x y) (hr : 0 < a) : SameRay R (a • x) y :=
+   h.nonneg_smul_left hr.le
+ 
++omit [IsStrictOrderedRing R] in
+ /-- If two vectors are on the same ray then they remain so after applying a linear map. -/
+ theorem map (f : M →ₗ[R] N) (h : SameRay R x y) : SameRay R (f x) (f y) :=
+   (h.imp fun hx => by rw [hx, map_zero]) <|
+     Or.imp (fun hy => by rw [hy, map_zero]) fun ⟨r₁, r₂, hr₁, hr₂, h⟩ =>
+       ⟨r₁, r₂, hr₁, hr₂, by rw [← f.map_smul, ← f.map_smul, h]⟩
+ 
++omit [IsStrictOrderedRing R] in
+ /-- The images of two vectors under an injective linear map are on the same ray if and only if the
+ original vectors are on the same ray. -/
+ theorem _root_.Function.Injective.sameRay_map_iff
+@@ -184,12 +191,14 @@ theorem _root_.Function.Injective.sameRay_map_iff
+     SameRay R (f x) (f y) ↔ SameRay R x y := by
+   simp only [SameRay, map_zero, ← hf.eq_iff, map_smul]
+ 
++omit [IsStrictOrderedRing R] in
+ /-- The images of two vectors under a linear equivalence are on the same ray if and only if the
+ original vectors are on the same ray. -/
+ @[simp]
+ theorem sameRay_map_iff (e : M ≃ₗ[R] N) : SameRay R (e x) (e y) ↔ SameRay R x y :=
+   Function.Injective.sameRay_map_iff (EquivLike.injective e)
+ 
++omit [IsStrictOrderedRing R] in
+ /-- If two vectors are on the same ray then both scaled by the same action are also on the same
+ ray. -/
+ theorem smul {S : Type*} [Monoid S] [DistribMulAction S M] [SMulCommClass R S M]
+@@ -355,6 +364,7 @@ section StrictOrderedCommRing
+ variable {R : Type*} [CommRing R] [PartialOrder R] [IsStrictOrderedRing R]
+ variable {M N : Type*} [AddCommGroup M] [AddCommGroup N] [Module R M] [Module R N] {x y : M}
+ 
++omit [IsStrictOrderedRing R] in
+ /-- `SameRay.neg` as an `iff`. -/
+ @[simp]
+ theorem sameRay_neg_iff : SameRay R (-x) (-y) ↔ SameRay R x y := by
+@@ -362,6 +372,7 @@ theorem sameRay_neg_iff : SameRay R (-x) (-y) ↔ SameRay R x y := by
+ 
+ alias ⟨SameRay.of_neg, SameRay.neg⟩ := sameRay_neg_iff
+ 
++omit [IsStrictOrderedRing R] in
+ theorem sameRay_neg_swap : SameRay R (-x) y ↔ SameRay R x (-y) := by rw [← sameRay_neg_iff, neg_neg]
+ 
+ lemma eq_zero_of_sameRay_neg_smul_right [IsDomain R] [IsTorsionFree R M] {r : R} (hr : r < 0)
