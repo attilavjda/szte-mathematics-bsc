@@ -1,0 +1,1 @@
+# szte-mathematics-bsc
