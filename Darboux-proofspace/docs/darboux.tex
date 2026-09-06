@@ -1,0 +1,464 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{arrows.meta,positioning,decorations.pathreplacing,patterns,calc,shapes.geometric}
+\usepackage{booktabs}
+\usepackage{geometry}
+\geometry{margin=2.4cm}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+
+\theoremstyle{plain}
+\newtheorem{theoreme}{Théorème}
+\newtheorem{forme}[theoreme]{Forme}
+\theoremstyle{definition}
+\newtheorem{defi}[theoreme]{Définition}
+\theoremstyle{remark}
+\newtheorem{obs}[theoreme]{Observation}
+
+\newcommand{\Darb}{\mathsf{Darb}}
+\newcommand{\Cont}{\mathsf{Cont}}
+\newcommand{\Der}{\mathsf{Der}}
+\newcommand{\Inj}{\mathsf{Inj}}
+\newcommand{\Mono}{\mathsf{Mono}}
+\newcommand{\CountIm}{\mathsf{CountIm}}
+\newcommand{\Const}{\mathsf{Const}}
+\newcommand{\SMA}{\mathsf{StrictMonoAnti}}
+\newcommand{\R}{\mathbb{R}}
+
+\title{Darboux : raisonnement diagrammatique,\\ catégories, types, géométrie\\[2mm]
+\large et une carte de l'espace de preuves (formalisée en Lean 4)}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent Prose minimale. Diagrammes, tables, énoncés. Chaque énoncé marqué
+\textsf{[Lean]} est démontré sans \texttt{sorry} dans \texttt{RequestProject/Darboux/}.
+\end{abstract}
+
+\section{Deux Darboux}
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+& \textbf{Darboux (analyse)} & \textbf{Darboux (symplectique)}\\
+\midrule
+Objet & $f' : I \to \R$ & $\omega$ forme symplectique sur $M^{2n}$\\
+Énoncé & $f'(I)$ est un intervalle & $\exists$ carte : $\omega = \sum dp_i\wedge dq_i$\\
+Slogan & pas de saut & pas d'invariant local\\
+Mécanisme & connexité $+$ Fermat & astuce de Moser (chemin $\omega_t$)\\
+Obstruction levée & continuité de $f'$ & modules locaux\\
+Dimension $1$ & --- & normalisation d'une densité \textsf{[Lean]}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+\noindent Le pont : les deux énoncés disent \emph{\og{}l'image d'un connexe est connexe\fg{}} pour
+un objet qui n'est pas une application continue (une dérivée ; un germe de forme).
+
+\section{Visualisations}
+
+\subsection{Ce qui est interdit : le saut}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.05]
+\begin{scope}
+  \draw[->] (-0.3,0) -- (3.4,0) node[right]{$x$};
+  \draw[->] (0,-0.3) -- (0,2.4) node[above]{$f'$};
+  \draw[very thick] (0.2,0.4) -- (1.5,0.4);
+  \draw[very thick] (1.5,1.8) -- (2.9,1.8);
+  \fill (1.5,0.4) circle (1.4pt);
+  \draw[dashed] (0,1.1) -- (3.1,1.1) node[right]{$m$};
+  \node[red] at (1.5,1.1) {\Large $\times$};
+  \node at (1.55,-0.55) {\small saut : $m$ jamais atteint};
+  \node at (1.55,-1.0) {\small \textbf{impossible} pour une dérivée};
+\end{scope}
+\begin{scope}[xshift=6cm]
+  \draw[->] (-0.3,0) -- (3.4,0) node[right]{$x$};
+  \draw[->] (0,-0.3) -- (0,2.4) node[above]{$f'$};
+  \draw[very thick,domain=0.2:2.9,samples=200,smooth]
+    plot (\x,{1.1+0.75*sin(360*\x/0.55)*exp(-0.15*\x)});
+  \draw[dashed] (0,1.1) -- (3.1,1.1) node[right]{$m$};
+  \node at (1.55,-0.55) {\small oscillation sauvage : \textbf{permise}};
+  \node at (1.55,-1.0) {\small ($f'$ non continue, mais $\Darb$)};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+\noindent Témoin : $f(x)=x^{2}\sin(1/x)$, $f(0)=0$ ; $f'$ existe partout, n'est pas continue
+en $0$, et vérifie la propriété des valeurs intermédiaires.
+
+\subsection{La preuve classique en une image (Fermat)}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.1]
+  \draw[->] (-0.3,0) -- (5.2,0) node[right]{$x$};
+  \draw[->] (0,-1.5) -- (0,1.6) node[above]{$g=f-m\,x$};
+  \draw[very thick,domain=0.3:4.7,samples=200,smooth]
+    plot (\x,{0.9*(\x-0.3)*(\x-4.7)*0.28});
+  \fill (0.3,0) circle (1.6pt) node[above left]{$a$};
+  \fill (4.7,0) circle (1.6pt) node[above right]{$b$};
+  \draw[dotted] (2.5,-1.11) -- (2.5,0) node[above]{$c$};
+  \fill (2.5,-1.11) circle (1.6pt);
+  \draw[<-] (2.9,-1.25) -- (4.0,-1.25) node[right]{\small $g'(c)=0$};
+  \draw[-{Stealth}] (0.35,0.05) -- (0.9,-0.25) node[midway,above right]{\small $g'(a)<0$};
+  \draw[-{Stealth}] (4.65,0.05) -- (4.1,-0.25) node[midway,above left]{\small $g'(b)>0$};
+\end{tikzpicture}
+\end{center}
+
+\noindent $f'(a)<m<f'(b)$ $\Rightarrow$ $g=f-mx$ a un minimum \emph{intérieur} $c$
+$\Rightarrow$ $g'(c)=0$ $\Rightarrow$ $f'(c)=m$. Ingrédients : compacité et Fermat.
+
+\subsection{Configuration à trois points (injectivité)}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  \draw[->] (-0.3,0) -- (5.6,0) node[right]{$x$};
+  \draw[->] (0,-0.3) -- (0,3.1) node[above]{$f$};
+  \fill (0.6,0.7) circle (1.6pt) node[below right]{$(a,f(a))$};
+  \fill (2.6,2.6) circle (1.6pt) node[above]{$(b,f(b))$};
+  \fill (4.8,0.9) circle (1.6pt) node[below left]{$(c,f(c))$};
+  \draw[dashed] (0,1.9) -- (5.3,1.9) node[right]{$z$};
+  \draw[thick,gray] plot[smooth,tension=0.8] coordinates {(0.6,0.7) (1.6,2.0) (2.6,2.6)};
+  \draw[thick,gray] plot[smooth,tension=0.8] coordinates {(2.6,2.6) (3.7,1.7) (4.8,0.9)};
+  \fill[red] (1.52,1.9) circle (1.8pt) node[below]{\small $p$};
+  \fill[red] (3.52,1.9) circle (1.8pt) node[below]{\small $q$};
+  \node at (2.6,-0.75) {\small $f(p)=f(q)=z$, $p\neq q$ : contredit l'injectivité};
+\end{tikzpicture}
+\end{center}
+
+\noindent Si $f(b)$ est un extremum strict du triplet, la valeur intermédiaire $z$ est
+atteinte deux fois : c'est le c\oe ur de la Forme~\ref{f:inj}.
+
+\subsection{Deux autres formes, en image}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.95]
+\begin{scope}
+  \draw[->] (-0.2,0) -- (4.4,0) node[right]{$x$};
+  \draw[->] (0,-0.2) -- (0,2.8) node[above]{$f$};
+  \draw[very thick] (0.3,0.5) -- (1.9,0.5);
+  \draw[very thick] (1.9,2.0) -- (4.0,2.0);
+  \draw[decorate,decoration={brace,amplitude=5pt},thick]
+    (4.25,0.5) -- (4.25,2.0) node[midway,right]{\small trou};
+  \node at (2.1,-0.7) {\small $\Mono$ : un saut $\Rightarrow$ un trou dans l'image};
+  \node at (2.1,-1.15) {\small donc $\Darb\ \&\ \Mono \Rightarrow \Cont$};
+\end{scope}
+\begin{scope}[xshift=7.2cm]
+  \draw[->] (-0.2,0) -- (4.4,0) node[right]{$x$};
+  \draw[->] (0,-0.2) -- (0,2.8) node[above]{$f$};
+  \foreach \y in {0.4,1.0,1.6,2.2} \draw[dotted] (0.2,\y) -- (4.1,\y);
+  \draw[very thick] (0.3,1.0) -- (4.0,1.0);
+  \node at (2.1,-0.7) {\small image dénombrable $\subseteq\{y_0,y_1,\dots\}$};
+  \node at (2.1,-1.15) {\small un intervalle non trivial est indénombrable};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+\subsection{La carte : l'espace de preuves}
+
+\begin{center}
+\begin{tikzpicture}[
+  nd/.style={draw,rounded corners=2pt,inner sep=3pt,font=\small},
+  hy/.style={circle,fill=black,inner sep=1.3pt},
+  ar/.style={-{Stealth[length=2mm]}},
+  hyar/.style={-{Stealth[length=2mm]},densely dashed}]
+
+  \node[nd] (der)  at (0,3)     {$\Der$};
+  \node[nd] (cont) at (0,1.5)   {$\Cont$};
+  \node[nd] (darb) at (3,2.25)  {$\Darb$};
+  \node[nd] (inj)  at (3,0.2)   {$\Inj$};
+  \node[nd] (mono) at (0,0)     {$\Mono$};
+  \node[nd] (cnt)  at (6.8,3.3) {$\CountIm$};
+  \node[nd] (cst)  at (9.6,2.2) {$\Const$};
+  \node[nd] (sma)  at (6.8,0.2) {$\SMA$};
+  \node[nd] (cg)   at (3,-1.5)  {$\mathsf{ClosedGraph}$};
+
+  \draw[ar] (der) -- (darb);
+  \draw[ar] (cont) -- (darb);
+  \draw[ar] (cst) to[bend right=20] (cont);
+  \draw[ar] (cst) to[bend left=32] (mono);
+  \draw[ar] (cst) to[bend right=12] (cnt);
+  \draw[ar] (sma) -- (inj);
+
+  \node[hy] (h1) at (5.0,1.1) {};
+  \draw (darb) -- (h1); \draw (inj) -- (h1);
+  \draw[hyar] (h1) -- (sma);
+
+  \node[hy] (h2) at (5.4,2.9) {};
+  \draw (darb) -- (h2); \draw (cnt) -- (h2);
+  \draw[hyar] (h2) -- (cst);
+
+  \node[hy] (h3) at (1.6,1.0) {};
+  \draw (darb) -- (h3); \draw (mono) -- (h3);
+  \draw[hyar] (h3) to[bend left=10] (cont);
+
+  \node[hy] (h4) at (1.2,-0.7) {};
+  \draw (darb) -- (h4); \draw (cg) -- (h4);
+  \draw[hyar] (h4) to[bend right=12] (cont);
+  \draw[ar] (cont) to[bend right=18] (cg);
+
+  \node[font=\scriptsize,anchor=west] at (-1.2,-2.4)
+    {\textbf{---} arête prouvée \qquad \textbf{-\,-} hyper-arête (deux hypothèses) \qquad
+     $\bullet$ n\oe ud de conjonction};
+\end{tikzpicture}
+\end{center}
+
+\noindent $\Const$ est le puits, $\Darb$ le carrefour. Non-arêtes (obstructions vraies) :
+$\Darb \nRightarrow \Cont$ ; $\Darb$ n'est stable ni par somme ni par composition ;
+$\Der \nRightarrow \Cont$.
+
+\subsection{Post-composition : la seule stabilité}
+
+\begin{center}
+\begin{tikzcd}[column sep=large,row sep=large]
+s \arrow[r,"f\ \in\ \Darb"] \arrow[dr,"g\circ f\ \in\ \Darb"',dashed]
+  & f(s) \arrow[d,"g\ \in\ \Cont"]\\
+  & g(f(s))
+\end{tikzcd}
+\end{center}
+
+\noindent \textsf{[Lean]} \texttt{DarbouxOn.comp\_continuousOn}. Rôles échangés
+($f\in\Cont$, $g\in\Darb$), la conclusion tombe. $\Darb$ n'est donc pas une catégorie : c'est
+un module à gauche sur $\Cont$.
+
+\section{Catégories}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Structure & Lecture de Darboux\\
+\midrule
+$\pi_0 : \mathbf{Top}\to\mathbf{Set}$ & $\Darb$ = \og{}préserve $\pi_0$\fg{} sans être un morphisme\\
+$\mathbf{OC}$ & objets : parties ordre-connexes de $\R$\\
+$\Darb(s)$ & module sur $\Cont$ : $g\cdot f := g\circ f$\\
+Multicatégorie & hyper-arêtes = multiflèches $(\Darb,\Inj)\to \SMA$\\
+Faisceaux & Darboux symplectique = trivialité locale du faisceau des $\omega$\\
+Pseudogroupe & $\mathrm{Symp}$ agit transitivement sur les germes\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tikzcd}[column sep=huge,row sep=large]
+\{\text{parties ordre-connexes}\} \arrow[r,"f_*"] \arrow[d,"\pi_0"']
+  & \{\text{parties ordre-connexes}\} \arrow[d,"\pi_0"]\\
+\{*\} \arrow[r,equal] & \{*\}
+\end{tikzcd}
+\end{center}
+
+\noindent Lecture : $f$ de Darboux $\iff$ $f_*$ préserve la fibre \og{}connexe\fg{} de $\pi_0$.
+Continuité $\Rightarrow$ fonctorialité ; Darboux $\Rightarrow$ préservation seule, sans
+fonctorialité (pas de stabilité par composition).
+
+\smallskip
+\noindent Version opéradique : un lemme à deux hypothèses est une opération
+$\mu : \Darb\otimes X \to Y$. La carte de la \S2.5 est le graphe sous-jacent d'une
+multicatégorie libre engendrée par les lemmes prouvés.
+
+\section{Types}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Énoncé & Type\\
+\midrule
+$\Darb$ & $\Pi_{t\subseteq s}\ \mathrm{OC}(t)\to \mathrm{OC}(f(t))$\\
+valeur intermédiaire & $\Pi_{a,b\in s}\Pi_{y\in[f a,f b]}\ \Sigma_{c\in[a,b]}\ f(c)=y$\\
+hyper-arête & $\Darb \to \Inj \to \SMA$ (règle à deux prémisses)\\
+non-arête & type \emph{non} habité (contre-exemple)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+$\dfrac{\ \Gamma\vdash h_1:\Darb(f,s)\qquad \Gamma\vdash h_2:\Inj(f,s)\ }
+{\ \Gamma\vdash \mathsf{sma}\,h_1\,h_2:\SMA(f,s)\ }\quad\textsc{(forme~\ref{f:inj})}$
+\end{center}
+
+\noindent Contenu constructif : le $\Sigma$ ci-dessus n'est pas réalisable
+constructivement (le théorème des valeurs intermédiaires classique implique LLPO) ; la
+preuve formalisée passe par le choix classique. Version constructive usuelle :
+$\forall\varepsilon>0,\ \exists c,\ |f(c)-y|<\varepsilon$.
+
+\smallskip
+\noindent Lecture \og{}recherche de preuves\fg{} : un lemme non prouvé est un \emph{trou}, un type
+dont on cherche un habitant. \texttt{proofspace.py} énumère les trous ;
+\texttt{Space.lean} certifie ceux qui sont comblés.
+
+\section{Géométrie}
+
+\subsection{Moser en une image}
+
+\begin{center}
+\begin{tikzpicture}[scale=1]
+  \draw[rounded corners=4pt,thick] (-5.4,-2.0) rectangle (5.4,2.1);
+  \node[anchor=north] at (0,2.05) {\small espace des germes de formes symplectiques en $p$};
+  \node (w0) at (-3.6,0.1) {$\omega_0=\omega$};
+  \node (w1) at (3.5,0.1) {$\omega_1=\sum dp_i\wedge dq_i$};
+  \draw[very thick,-{Stealth}] (w0) to[bend left=22]
+    node[midway,above]{\small $\omega_t=(1-t)\omega_0+t\omega_1$} (w1);
+  \draw[dashed,-{Stealth}] (w0) to[bend right=22]
+    node[midway,below]{\small flot $\psi_t$ de $X_t$, $\iota_{X_t}\omega_t=-\alpha$} (w1);
+  \node at (0,-1.65)
+    {$\psi_t^{*}\omega_t=\omega_0$ \quad$\Longrightarrow$\quad $\psi_1^{*}\omega_1=\omega_0$};
+\end{tikzpicture}
+\end{center}
+
+\noindent Ingrédients : $\omega_1-\omega_0=d\alpha$ (lemme de Poincaré, local) ;
+non-dégénérescence sur un voisinage ; l'équation $\iota_{X_t}\omega_t=-\alpha$ est
+\emph{algébrique} en $X_t$. La rigidité vient de là.
+
+\subsection{Dimension 1 : la densité, formalisée}
+
+\begin{center}
+\begin{tikzpicture}[scale=1]
+\begin{scope}
+  \draw[->] (-0.2,0) -- (3.6,0) node[right]{$x$};
+  \draw[->] (0,-0.2) -- (0,2.2) node[above]{$\rho$};
+  \draw[very thick,domain=0.15:3.3,samples=120,smooth]
+    plot (\x,{0.6+0.5*\x-0.09*\x*\x});
+  \node at (1.7,-0.7) {\small densité $\rho>0$};
+\end{scope}
+\draw[-{Stealth},very thick] (4.2,1.0) -- (5.6,1.0)
+  node[midway,above]{\small $\Phi(x)=\int_0^x\rho$};
+\begin{scope}[xshift=6.4cm]
+  \draw[->] (-0.2,0) -- (3.6,0) node[right]{$u=\Phi(x)$};
+  \draw[->] (0,-0.2) -- (0,2.2) node[above]{$1$};
+  \draw[very thick] (0.15,1.0) -- (3.3,1.0);
+  \node at (1.7,-0.7) {\small densité constante $du$};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+\noindent \textsf{[Lean]} \texttt{Darboux.exists\_chart\_of\_density} :
+$\Phi$ strictement croissante, $\Phi'=\rho$, $\mathrm{im}\,\Phi$ intervalle,
+$\int_a^b\rho=\Phi(b)-\Phi(a)$. Moser en dimension~$1$ : la carte est la primitive, et son
+image est un intervalle par le premier Darboux.
+
+\section{Grandes idées}
+
+\begin{enumerate}\itemsep2pt
+\item \textbf{Connexité transportée sans continuité.} Darboux sépare \og{}préserver les
+intervalles\fg{} de \og{}être continue\fg{}. Le n\oe ud $\Darb$, pas $\Der$, est l'unité d'analyse
+qui fait marcher les preuves.
+\item \textbf{Rigidité par cardinalité.} Un intervalle non trivial est indénombrable :
+toute contrainte dénombrable sur les valeurs force la constance (Forme~\ref{f:count}).
+\item \textbf{Rigidité par ordre.} Injectivité $+$ valeurs intermédiaires $=$ monotonie
+stricte (Forme~\ref{f:inj}) ; monotonie $+$ valeurs intermédiaires $=$ continuité
+(Forme~\ref{f:mono}).
+\item \textbf{Ce que la linéarité ajoute.} $\Der$ est un espace vectoriel, $\Darb$ non :
+d'où des formes réservées aux dérivées, comme $f'(x)\neq x$ partout $\Rightarrow$ signe
+constant de $f'-\mathrm{id}$ (Forme~\ref{f:fix}).
+\item \textbf{Pas d'invariant local} (versant symplectique) : \og{}pas de saut\fg{}, un cran plus
+haut.
+\item \textbf{Un espace de preuves est un hypergraphe.} Les conjectures non cartographiées
+sont ses trous : paires ouvertes et triplets $(X,Y)\to Z$ non couverts.
+\end{enumerate}
+
+\section{Formes récoltées (toutes formalisées)}
+
+Cadre commun : $s\subseteq\R$ ordre-connexe, $f:\R\to\R$.
+
+\begin{forme}[valeur évitée]\label{f:sign}
+$f\in\Darb(s)$ et $f\neq m$ sur $s$ $\Rightarrow$ $f<m$ partout, ou $f>m$ partout.
+\par\smallskip\hfill\small\texttt{DarbouxOn.forall\_lt\_or\_forall\_gt}
+\end{forme}
+
+\begin{forme}[image dénombrable]\label{f:count}
+$f\in\Darb(s)$ et $f(s)$ dénombrable $\Rightarrow$ $f$ constante sur $s$ ; en particulier
+une dérivée à valeurs entières est constante.
+\par\smallskip\hfill\small\texttt{DarbouxOn.subsingleton\_image\_of\_countable}, \texttt{deriv\_eq\_of\_int\_valued}
+\end{forme}
+
+\begin{forme}[injectivité]\label{f:inj}
+$f\in\Darb(s)$ et $f$ injective sur $s$ $\Rightarrow$ $f$ strictement monotone sur $s$ ;
+généralisation sans continuité de \texttt{ContinuousOn.strictMonoOn\_of\_injOn\_Icc'}.
+\par\smallskip\hfill\small\texttt{DarbouxOn.strictMonoOn\_or\_strictAntiOn}
+\end{forme}
+
+\begin{forme}[monotonie]\label{f:mono}
+$f\in\Darb(s)$, $f$ croissante, $s$ ouvert $\Rightarrow$ $f$ continue sur $s$.
+\par\smallskip\hfill\small\texttt{DarbouxOn.continuousOn\_of\_monotoneOn\_of\_isOpen}
+\end{forme}
+
+\begin{forme}[convexe $\Rightarrow$ $C^1$]\label{f:cvx}
+$f$ convexe et dérivable sur un ouvert convexe $\Rightarrow$ $f'$ continue (corollaire de
+\ref{f:mono} : $f'$ est monotone \emph{et} de Darboux).
+\par\smallskip\hfill\small\texttt{Darboux.ConvexOn.continuousOn\_deriv}
+\end{forme}
+
+\begin{forme}[point fixe des dérivées]\label{f:fix}
+$f$ dérivable sur $s$ avec $f'(x)\neq x$ partout $\Rightarrow$ $f'<\mathrm{id}$ partout ou
+$f'>\mathrm{id}$ partout ; utilise que $f'-\mathrm{id}$ est encore une dérivée.
+\par\smallskip\hfill\small\texttt{Darboux.deriv\_lt\_id\_or\_id\_lt\_deriv}
+\end{forme}
+
+\begin{forme}[graphe fermé]\label{f:cg}
+$f\in\Darb(\R)$ et graphe de $f$ fermé $\Rightarrow$ $f$ continue.
+\par\smallskip\hfill\small\texttt{DarbouxOn.continuous\_of\_isClosed\_graph}
+\end{forme}
+
+\begin{forme}[obstruction]\label{f:sgn}
+La fonction signe n'est la dérivée d'aucune fonction.
+\par\smallskip\hfill\small\texttt{Darboux.not\_isDeriv\_sign}
+\end{forme}
+
+\begin{forme}[forme normale, dim.\ $1$]\label{f:norm}
+$\rho$ continue $>0$ $\Rightarrow$ $\exists\Phi$ strictement croissante, $\Phi'=\rho$,
+$\mathrm{im}\,\Phi$ intervalle, $\int_a^b\rho=\Phi(b)-\Phi(a)$.
+\par\smallskip\hfill\small\texttt{Darboux.exists\_chart\_of\_density}
+\end{forme}
+
+\section{Trous restants (conjectures candidates)}
+
+Sortie de \texttt{proofspace.py darboux.space} : $42$ paires ouvertes. Les plus parlantes,
+avec leur statut :
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Trou & Statut & Commentaire\\
+\midrule
+$\Darb \Rightarrow \Cont$ & faux & $x^2\sin(1/x)$\\
+$\Darb$ stable par $+$ & faux & non formalisé ici\\
+$\Darb$ stable par $\circ$ & faux & non formalisé ici\\
+$\Der \Rightarrow$ classe de Baire $1$ & vrai (classique) & non formalisé ici\\
+$\Darb\ \&\ \text{graphe fermé} \Rightarrow \Cont$ & prouvé & Forme~\ref{f:cg}\\
+$\Darb\ \&\ \text{localement borné} \Rightarrow{}?$ & ouvert dans cette carte & à tester\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Boucle de travail : (i) fixer un vocabulaire ; (ii) prouver les arêtes évidentes ;
+(iii) demander au script les paires et triplets non couverts ; (iv) pour chacun, tenter
+l'énoncé \emph{ou} sa négation ; (v) réinjecter. Les Formes~\ref{f:count}, \ref{f:inj},
+\ref{f:mono}, \ref{f:fix} sortent de là : ce sont des hyper-arêtes que l'on n'écrit pas
+d'habitude, parce que ces théorèmes sont énoncés avec \og{}continue\fg{} à la place de
+\og{}Darboux\fg{}.
+
+\section*{Fichiers}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\texttt{RequestProject/Darboux/Basic.lean} & $\Darb$, ses deux sources, stabilités\\
+\texttt{RequestProject/Darboux/Shapes.lean} & Formes \ref{f:sign}--\ref{f:mono}, \ref{f:cg}\\
+\texttt{RequestProject/Darboux/Deriv.lean} & Formes \ref{f:cvx}, \ref{f:fix}, \ref{f:sgn}\\
+\texttt{RequestProject/Darboux/Space.lean} & le graphe, vérifié\\
+\texttt{RequestProject/Darboux/Normal.lean} & Forme \ref{f:norm}\\
+\texttt{darboux.space} & entrée de \texttt{proofspace.py}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}

@@ -1,0 +1,21 @@
+# L'espace de preuves autour de Darboux, tel qu'il est vérifié dans
+# RequestProject/Darboux/Space.lean.
+#   python3 proofspace.py darboux.space
+#   python3 proofspace.py darboux.space --dot
+
+# arêtes prouvées
+Cont          => Darb
+Der           => Darb
+Const         => Cont
+Const         => Mono
+Const         => CountIm
+StrictMonoAnti => Inj
+
+# hyper-arêtes récoltées (les « formes » de lemmes)
+Darb & Inj     => StrictMonoAnti
+Darb & CountIm => Const
+Darb & Mono    => Cont
+Darb & ClosedGraph => Cont
+
+# arête supplémentaire
+Cont => ClosedGraph
