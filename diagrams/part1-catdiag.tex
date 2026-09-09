@@ -1,0 +1,162 @@
+% ==========================================================================
+\section{Language A: commutative diagrams}
+\label{sec:catdiag}
+
+\paragraph{Marks.} Dots (objects) and arrows (morphisms); an arrow may be labelled.
+\paragraph{Legal moves.} \emph{Pasting}: two commuting cells sharing an edge form a
+commuting region. \emph{Filling}: if all inner cells commute, the outer boundary commutes.
+\paragraph{Soundness.} Associativity and unitality of composition; this is a theorem, and
+it is why the language is safe.
+
+\subsection{The inverse, in four arrows}
+
+``$g$ is inverse to $f$'' is by definition a statement about two triangles.
+
+\begin{figure}[H]
+\centering
+\begin{tikzcd}[column sep=large,row sep=large]
+X \arrow[r,"f"] \arrow[dr,"\id_X"'] & Y \arrow[d,"g"] \\
+ & X
+\end{tikzcd}
+\qquad
+\begin{tikzcd}[column sep=large,row sep=large]
+Y \arrow[r,"g"] \arrow[dr,"\id_Y"'] & X \arrow[d,"f"] \\
+ & Y
+\end{tikzcd}
+\qquad
+\begin{tikzcd}[column sep=large,row sep=large]
+Y \arrow[r,"g'"] \arrow[dr,"\id_Y"'] & X \arrow[d,"f"] \arrow[r,"g"] & Y \\
+ & Y \arrow[ur,"g"'] &
+\end{tikzcd}
+\caption{Left and centre: the two triangles that say $g=f^{-1}$. Right: pasting the
+left-inverse triangle of $g'$ onto the arrow $g$ shows $g'=g'\circ\id=g'\circ(f\circ g)
+=(g'\circ f)\circ g=\id\circ g=g$. The inverse is unique -- drawn, not computed.
+Certified in \lean{DiagramProofs.inverse\_unique} and, in an arbitrary category, in
+\lean{SyllabusOverlap.inverse\_unique}.}
+\label{fig:invunique}
+\end{figure}
+
+One picture covers both halves of the syllabus overlap:
+\begin{itemize}\itemsep2pt
+\item \emph{Kalkulus}, exercises 2.3--2.9 of \lean{kalkulus\_gyakorlo.pdf}: an answer
+  $f^{-1}$ is right precisely when \emph{both} triangles close. Students routinely check
+  only one; the diagram makes the omission visible.
+\item \emph{Line\'aris algebra}: $MN=I$ with $\det M\neq 0$ forces $N=M^{-1}$ -- the same
+  figure with $X=Y=\R^n$ and arrows the linear maps.
+\end{itemize}
+
+\subsection{The triangle inequality as composition (Lawvere)}
+
+The triangle inequality looks like a statement about numbers, not a diagram. Lawvere's
+observation is that it \emph{is} a composition law. Read a metric space as a category
+whose objects are the points, whose hom-object from $x$ to $y$ is the number $\dd(x,y)$,
+whose composition is $+$, and in which ``$\ge$'' is the direction of implication.
+
+\begin{figure}[H]
+\centering
+\begin{tikzcd}[column sep=huge,row sep=large]
+x \arrow[r,"\dd(x{,}y)"] \arrow[dr,"\dd(x{,}z)"'] & y \arrow[d,"\dd(y{,}z)"] \\
+ & z
+\end{tikzcd}
+\qquad\raisebox{10mm}{$\rightsquigarrow$}\qquad
+\begin{tikzpicture}[baseline=(current bounding box.center)]
+  \coordinate (x) at (0,0);
+  \coordinate (y) at (2.4,1.3);
+  \coordinate (z) at (3.5,-0.5);
+  \draw[vec] (x) -- node[above left]{$\dd(x,y)$} (y);
+  \draw[vec] (y) -- node[right]{$\dd(y,z)$} (z);
+  \draw[vec,dashed] (x) -- node[below]{$\dd(x,z)$} (z);
+  \fill (x) circle (1.6pt) node[left]{$x$};
+  \fill (y) circle (1.6pt) node[above]{$y$};
+  \fill (z) circle (1.6pt) node[right]{$z$};
+\end{tikzpicture}
+\caption{The same statement twice. Left: the composite arrow $x\to z$ exists \emph{at
+cost} $\dd(x,y)+\dd(y,z)$, while the hom-object $\dd(x,z)$ records the cheapest cost;
+hence $\dd(x,z)\le\dd(x,y)+\dd(y,z)$. Right: the schoolbook triangle. Certified in
+\lean{DiagramProofs.detour}.}
+\label{fig:lawvere}
+\end{figure}
+
+Two things become visible in the categorical drawing that the schoolbook triangle hides.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \foreach \i/\lab in {0/{f_0},1/{f_1},2/{f_2},3/{f_3},4/{f_4}}
+    {\fill (1.5*\i,0) circle (1.6pt) node[below=3pt]{$\lab$};}
+  \foreach \i in {0,1,2,3}
+    {\draw[vec] (1.5*\i+0.14,0) -- (1.5*\i+1.36,0);}
+  \draw[vec,dashed] (0,0.8) .. controls (3,1.9) .. (6,0.8);
+  \node at (3,2.0) {$\dd(f_0,f_4)$};
+  \node at (0.75,0.22) {$\scriptstyle \dd_0$};
+  \node at (2.25,0.22) {$\scriptstyle \dd_1$};
+  \node at (3.75,0.22) {$\scriptstyle \dd_2$};
+  \node at (5.25,0.22) {$\scriptstyle \dd_3$};
+\end{tikzpicture}
+\caption{Composing a \emph{chain}: iterate the pasting move $n-1$ times to get
+$\dd(f_0,f_n)\le\sum_{i<n}\dd(f_i,f_{i+1})$. With $f_k=\sum_{i<k}a_i$ in $\R$ this is
+exercise 1.13 (generalised triangle inequality); with $f_k=\sum_{i<k}v_i$ in $\R^n$ it is
+$\norm{\sum v_i}\le\sum\norm{v_i}$. One drawing, two courses. Certified in
+\lean{TriangleOverlap.dist\_chain} and \lean{DiagramProofs.abs\_sum\_range\_le\_sum\_abs}.}
+\label{fig:chain}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  \draw[thick] (0,0) circle (2.1);
+  \node at (-1.55,1.55) {$B(x,r)$};
+  \fill (0,0) circle (1.6pt) node[below left]{$x$};
+  \coordinate (y) at (1.1,0.35);
+  \draw[thick,dashed] (y) circle (0.95);
+  \fill (y) circle (1.6pt) node[above]{$y$};
+  \draw[vec,gray!70!black] (0,0) -- node[below,pos=0.55,font=\scriptsize]{$\dd(x,y)$} (y);
+  \draw[vec,gray!70!black] (y) -- ++(0.67,0.67)
+        node[right,font=\scriptsize]{$r-\dd(x,y)$};
+\end{tikzpicture}
+\caption{The triangle inequality drawn as an \emph{inclusion of discs}: if
+$\dd(x,y)<r$ then $B\bigl(y,\,r-\dd(x,y)\bigr)\subseteq B(x,r)$. This is the picture
+every ``open set'' and every limit argument in the course actually uses; drawing the two
+nested circles is equivalent to writing the inequality. Certified in
+\lean{DiagramProofs.ball\_subset\_ball\_of\_mem}.}
+\label{fig:balls}
+\end{figure}
+
+\begin{recipe}[Draw an estimate as an arrow]
+Whenever the quantity you must bound is the ``cost of getting from $A$ to $B$'', draw $A$
+and $B$ as dots and every estimate you already have as a labelled arrow. Chaining arrows
+adds costs; the bound you want is the cheapest path. Every $\varepsilon/3$ argument in
+\emph{Kalkulus I} is this picture with three arrows:
+\[
+|f(x)-L|\;\le\;\underbrace{|f(x)-f_n(x)|}_{\varepsilon/3}
++\underbrace{|f_n(x)-L_n|}_{\varepsilon/3}+\underbrace{|L_n-L|}_{\varepsilon/3}.
+\]
+\end{recipe}
+
+\subsection{The bridge between the two courses, in one arrow}
+
+The two syllabus items are joined by a single morphism of the category $\Met$: the length
+map $\norm{\cdot}\colon\R^n\to\R$ is \emph{short}, i.e.\ distance non-increasing.
+
+\begin{figure}[H]
+\centering
+\begin{tikzcd}[column sep=huge, row sep=large]
+(\R^n,\ \dd(u,v)=\norm{u-v}) \arrow[r,"\norm{\cdot}"] & (\R,\ \dd(s,t)=|s-t|)
+\end{tikzcd}\\[3mm]
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[vec] (0,0) -- node[above left]{$u$} (1.3,1.1);
+  \draw[vec] (1.3,1.1) -- node[above right]{$v-u$} (2.9,0.55);
+  \draw[vec,dashed] (0,0) -- node[below]{$v$} (2.9,0.55);
+  \node at (4.3,0.6) {$\longmapsto$};
+  \draw[axis] (5.3,0.3) -- (9.4,0.3);
+  \foreach \p/\l in {5.7/0, 7.1/{\norm{u}}, 8.6/{\norm{v}}}
+    {\fill (\p,0.3) circle (1.4pt) node[below=2pt,font=\scriptsize]{$\l$};}
+  \draw[decorate,decoration={brace,amplitude=4pt}] (7.1,0.55) -- (8.6,0.55)
+    node[midway,above,font=\scriptsize]{$\le\norm{u-v}$};
+\end{tikzpicture}
+\caption{The bridge. Applying the arrow $\norm{\cdot}$ collapses the vector triangle of
+\emph{Line\'aris algebra} onto the absolute-value triangle of \emph{Kalkulus}:
+$\bigl|\norm{u}-\norm{v}\bigr|\le\norm{u-v}$. Certified in
+\lean{DiagramProofs.length\_short} and \lean{TriangleOverlap.lengthShort}.}
+\label{fig:bridge}
+\end{figure}

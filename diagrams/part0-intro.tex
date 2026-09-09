@@ -1,0 +1,81 @@
+\begin{abstract}
+\noindent
+Two items occur in both the \emph{Kalkulus I} and the \emph{Line\'aris algebra I}
+\emph{t\'argytematika}: the \textbf{triangle inequality} (``nevezetes
+egyenl\H otlens\'egek'' / ``vektorok hossza, h\'aromsz\"og-egyenl\H otlens\'eg'') and the
+\textbf{inverse with respect to composition} (``inverz f\"uggv\'eny, \"osszet\'etel'' /
+``m\'atrixok inverze''). The companion Lean files show that in each case the two courses
+state one thing: the triangle inequality \emph{is} composition in a category enriched
+over $([0,\infty),\ge,+)$, and the inverse \emph{is} isomorphism in a category. This
+document asks the complementary question: \emph{how do you draw that, and how far can a
+drawing alone carry a proof?} We survey eight diagrammatic languages -- commutative
+diagrams, string diagrams (``graphical linear algebra''), proofs without words,
+number-line and $\varepsilon$-interval pictures, Cartesian graphs and the mirror $y=x$,
+Euler/Venn and bag-and-arrow diagrams, order (Hasse) diagrams, and geometric optimisation
+pictures. For each we state its marks, its legal moves and whether it is certified, and
+then work through the exercises of \lean{kalkulus\_gyakorlo.pdf} that can be settled by
+drawing. The last section is a playbook for a timed exam. Every mathematical claim
+illustrated here is stated and proved in \lean{RequestProject/DiagramProofs.lean}; the
+captions name the corresponding theorem.
+\end{abstract}
+
+\tableofcontents
+
+% ==========================================================================
+\section{What has to be true for a drawing to be a proof}
+\label{sec:what}
+
+A picture is a proof when it is a term of a formal language whose syntax happens to be
+two-dimensional. Three separate things must be in place.
+
+\begin{description}[leftmargin=2.2em,style=nextline]
+\item[Syntax.] A fixed finite stock of marks (arrows, boxes, wires, dots, segments,
+  shaded regions) and a rule saying which arrangements of marks are well formed. A doodle
+  that is not well formed is not a statement at all, so it can be neither a proof nor a
+  mistake -- it is noise.
+\item[Legal moves.] A list of allowed transformations of one well-formed diagram into
+  another: pasting two commuting cells, sliding a box along a wire, cutting a region and
+  reassembling it, reflecting a graph in $y=x$.
+\item[Soundness.] A theorem -- proved once, symbolically, \emph{outside} the picture
+  language -- saying: if a diagram $D$ can be turned into $D'$ by legal moves, then the
+  statement denoted by $D$ implies the statement denoted by $D'$.
+\end{description}
+
+The third point splits the languages below into two very different classes.
+
+\begin{itemize}
+\item \textbf{Certified languages.} Commutative diagrams and string diagrams come with a
+  proved soundness, and often completeness, theorem. For string diagrams in a monoidal
+  category, two diagrams are related by planar deformation exactly when the corresponding
+  algebraic terms are equal (Joyal--Street). Here the drawing \emph{is} the term: you are
+  not illustrating a proof, you are writing one.
+\item \textbf{Heuristic languages.} A dissection picture, a number-line sketch or a
+  Cartesian graph has no such theorem behind it. It proves something only relative to a
+  small \emph{symbolic residue}: which configuration is generic, which case is missing,
+  whether the curve really is monotone. In practice the residue is one or two lines.
+\end{itemize}
+
+\begin{center}
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+Language & Marks & Legal move & Certified? \\
+\midrule
+Commutative diagrams   & objects, arrows        & pasting, filling & yes \\
+String diagrams        & boxes, wires, spiders  & planar isotopy, rewriting & yes \\
+Proofs without words   & regions, lengths       & dissection, superposition & no \\
+Number line            & points, intervals      & translation, reflection & no \\
+Cartesian graphs       & curves, lines          & reflection, transformation & no \\
+Euler / bag-and-arrow  & blobs, dots, arrows    & containment, chaining & partly \\
+Hasse / order          & nodes, upward edges    & path composition & yes \\
+Geometric optimisation & figures, envelopes     & superposition & no \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+\noindent
+Hence the rule of thumb we return to in Section~\ref{sec:exam}: \emph{use a certified
+language when the statement is about composition or invertibility; use a heuristic
+language when the statement is about a quantity, and write its symbolic residue on one
+line next to the picture.}

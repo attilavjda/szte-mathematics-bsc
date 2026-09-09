@@ -1,0 +1,194 @@
+% ==========================================================================
+\section{Language E: Cartesian graphs and the mirror $y=x$}
+\label{sec:graphs}
+
+\paragraph{Marks.} Axes, curves, straight lines, dashed construction lines.
+\paragraph{Legal moves.} Reflect in $y=x$ (pass to the inverse relation); translate,
+scale and reflect the plane (elementary transformations); superimpose two curves (solve an
+equation); sweep a horizontal or vertical line across the picture (test injectivity or
+functionality).
+\paragraph{Soundness.} A function \emph{is} its graph, a set of pairs, and reflecting in
+$y=x$ swaps the coordinates of every pair. Therefore the reflection move is exact: the
+mirror image of the graph of $f$ is always the graph of the \emph{relation} $f^{-1}$. The
+residue is one word: whether that relation is again a function, i.e.\ whether $f$ is
+injective.
+
+\subsection{The mirror}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.05cm,y=1.05cm]
+  \clip (-2.6,-2.6) rectangle (3.4,3.4);
+  \draw[axis] (-2.5,0) -- (3.3,0);
+  \draw[axis] (0,-2.5) -- (0,3.3);
+  \draw[gray,dashed] (-2.4,-2.4) -- (3.2,3.2);
+  \node[gray,font=\scriptsize,anchor=south west] at (2.4,2.4) {$y=x$};
+  \draw[very thick,blue!60!black,domain=-2.4:1.2,samples=60,smooth]
+      plot (\x,{exp(\x)});
+  \draw[very thick,red!60!black,domain=0.09:3.3,samples=60,smooth]
+      plot (\x,{ln(\x)});
+  \node[blue!60!black,font=\scriptsize,anchor=south] at (1.25,3.0) {$\exp$};
+  \node[red!60!black,font=\scriptsize,anchor=west] at (2.7,1.15) {$\log$};
+  \draw[dotted,thick] (0.7,2.013) -- (2.013,0.7);
+  \fill (0.7,2.013) circle (1.3pt);
+  \fill (2.013,0.7) circle (1.3pt);
+\end{tikzpicture}
+\hspace{0.6cm}
+\begin{tikzpicture}[x=0.62cm,y=0.62cm]
+  \clip (-4.2,-4.2) rectangle (4.6,4.6);
+  \draw[axis] (-4,0) -- (4.5,0);
+  \draw[axis] (0,-4) -- (0,4.5);
+  \draw[gray,dashed] (-4,-4) -- (4.4,4.4);
+  \draw[very thick,violet,domain=1.7:4.5,samples=50,smooth]
+      plot (\x,{(\x+1)/(\x-1)});
+  \draw[very thick,violet,domain=-4.2:0.45,samples=60,smooth]
+      plot (\x,{(\x+1)/(\x-1)});
+  \node[violet,font=\scriptsize,anchor=west] at (2.6,1.4) {$f(x)=\frac{x+1}{x-1}$};
+\end{tikzpicture}
+\caption{Left: reflecting the graph of $\exp$ in the dashed mirror gives the graph of
+$\log$ -- the calculus half of the ``inverse'' overlap
+(\lean{SyllabusOverlap.expIso}); the general statement is
+\lean{DiagramProofs.mem\_graph\_iff\_swap\_mem\_graph\_symm}. Right: exercise 2.7. Its
+graph is \emph{unchanged} by the mirror, which is the drawn form of $f^{-1}=f$; a single
+picture answers the whole exercise. Certified in \lean{DiagramProofs.self\_inverse\_2\_7}.}
+\label{fig:mirror}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.0cm,y=0.62cm]
+  \clip (-2.4,-3.4) rectangle (2.6,3.6);
+  \draw[axis] (-2.3,0) -- (2.5,0);
+  \draw[axis] (0,-3.2) -- (0,3.4);
+  \draw[very thick,blue!60!black,domain=-1.75:1.75,samples=60,smooth]
+      plot (\x,{\x*\x*\x - 2*\x});
+  \draw[red,thick] (-2.3,0.9) -- (2.5,0.9);
+  \fill[red] (-1.08,0.9) circle (1.6pt);
+  \fill[red] (-0.52,0.9) circle (1.6pt);
+  \fill[red] (1.60,0.9) circle (1.6pt);
+  \node[red,font=\scriptsize,anchor=north] at (0.1,-1.4) {3 hits: not injective};
+\end{tikzpicture}
+\hspace{0.8cm}
+\begin{tikzpicture}[x=1.0cm,y=0.62cm]
+  \clip (-2.4,-3.4) rectangle (2.6,3.6);
+  \draw[axis] (-2.3,0) -- (2.5,0);
+  \draw[axis] (0,-3.2) -- (0,3.4);
+  \draw[very thick,blue!60!black,domain=-1.45:1.45,samples=60,smooth]
+      plot (\x,{\x*\x*\x + \x});
+  \draw[red,thick] (-2.3,1.2) -- (2.5,1.2);
+  \fill[red] (0.76,1.2) circle (1.6pt);
+  \node[red,font=\scriptsize,anchor=north] at (0.1,-1.4) {1 hit: injective};
+\end{tikzpicture}
+\caption{The horizontal line test, exercises 2.2 and 2.6: sweep a horizontal line and
+count intersections. On the right the curve is strictly increasing, and a strictly
+monotone function is injective -- the residue that turns the picture into a proof
+(\lean{DiagramProofs.strictMono\_injective}); in practice one writes the single line
+$g'(x)=3x^{2}+1>0$.}
+\label{fig:hlt}
+\end{figure}
+
+\subsection{Elementary transformations (exercise 2.16) as a pipeline of moves}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=0.5cm,y=0.32cm]
+ \foreach \k/\shift in {0/0, 1/7, 2/14, 3/21}{
+   \begin{scope}[xshift=\shift*0.5cm]
+     \draw[axis] (-2.6,0) -- (2.8,0);
+     \draw[axis] (0,-4.4) -- (0,5.4);
+   \end{scope}}
+ % 1: x^2
+ \draw[very thick,blue!60!black,domain=-2.2:2.2,samples=40,smooth] plot (\x,{\x*\x});
+ \node[font=\scriptsize] at (0,-5.6) {$x^{2}$};
+ % 2: (x+1)^2
+ \begin{scope}[xshift=3.5cm]
+   \draw[very thick,blue!60!black,domain=-2.4:1.4,samples=40,smooth] plot (\x,{(\x+1)*(\x+1)});
+   \node[font=\scriptsize] at (0,-5.6) {$(x+1)^{2}$};
+ \end{scope}
+ % 3: -2(x+1)^2
+ \begin{scope}[xshift=7cm]
+   \draw[very thick,blue!60!black,domain=-2.4:0.5,samples=40,smooth]
+       plot (\x,{-2*(\x+1)*(\x+1)});
+   \node[font=\scriptsize] at (0,-5.6) {$-2(x+1)^{2}$};
+ \end{scope}
+ % 4: -2(x+1)^2+4
+ \begin{scope}[xshift=10.5cm]
+   \draw[very thick,blue!60!black,domain=-2.4:0.5,samples=40,smooth]
+       plot (\x,{-2*(\x+1)*(\x+1)+4});
+   \node[font=\scriptsize] at (0,-5.6) {$-2(x+1)^{2}+4$};
+ \end{scope}
+ \foreach \s in {2.0,5.5,9.0}{
+   \node at (\s,0.6) {$\rightsquigarrow$};}
+\end{tikzpicture}
+\caption{Exercise 2.16 a) as a sequence of legal moves on the plane: shift left by $1$,
+scale vertically by $-2$, shift up by $4$. Each move is a bijection of the plane taking
+graphs to graphs, so the pipeline is a valid derivation. This is a diagrammatic
+\emph{calculation}, not an illustration: the answer is the last picture.}
+\label{fig:transf}
+\end{figure}
+
+\subsection{Composition, read off two graphs}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.5cm,y=1.5cm]
+  \draw[axis] (0,0) -- (3.2,0);
+  \draw[axis] (0,0) -- (0,2.6);
+  \draw[gray,dashed] (0,0) -- (2.4,2.4);
+  \node[gray,font=\scriptsize,anchor=south east] at (2.4,2.35) {$y=x$};
+  \draw[very thick,blue!60!black,domain=0.05:2.3,samples=50,smooth]
+      plot (\x,{0.55*\x+0.35});
+  \node[blue!60!black,font=\scriptsize,anchor=west] at (2.32,1.62) {$g$};
+  \draw[very thick,red!60!black,domain=0.05:2.3,samples=50,smooth]
+      plot (\x,{0.35*\x*\x+0.2});
+  \node[red!60!black,font=\scriptsize,anchor=west] at (2.32,2.05) {$f$};
+  % construction for x0 = 1.4 : g(1.4)=1.12 ; f(1.12)=0.639
+  \draw[-{Stealth[length=1.8mm]},thick] (1.4,0) -- (1.4,1.12);
+  \draw[-{Stealth[length=1.8mm]},thick] (1.4,1.12) -- (1.12,1.12);
+  \draw[-{Stealth[length=1.8mm]},thick] (1.12,1.12) -- (1.12,0.639);
+  \draw[-{Stealth[length=1.8mm]},thick] (1.12,0.639) -- (0,0.639);
+  \node[font=\scriptsize,anchor=north] at (1.4,-0.03) {$x_0$};
+  \node[font=\scriptsize,anchor=east] at (-0.03,0.639) {$f(g(x_0))$};
+\end{tikzpicture}
+\caption{Composition without formulas (exercises 2.10, 2.13): go up to $g$, across to the
+mirror line to turn the output into an input, up (or down) to $f$, across to the axis.
+The same construction with $f=g$ is the cobweb that iterates a function; it is how one
+sees the recursion of exercise 1.18 converging to $\sqrt2$.}
+\label{fig:cobweb}
+\end{figure}
+
+\subsection{Differentiability and convexity are visible; their proofs are not}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.1cm,y=1.1cm]
+  \draw[axis] (-1.6,0) -- (1.8,0);
+  \draw[axis] (0,-0.3) -- (0,1.8);
+  \draw[very thick,blue!60!black] (-1.5,1.5) -- (0,0) -- (1.5,1.5);
+  \node[font=\scriptsize,anchor=north west] at (0.05,-0.05) {corner};
+  \draw[dashed,red] (-0.9,-0.3) -- (0.9,0.9);
+  \draw[dashed,red] (0.9,-0.3) -- (-0.9,0.9);
+  \node[font=\scriptsize] at (0.1,-0.75) {$|x|$ at $0$: two tangents};
+\end{tikzpicture}
+\hspace{1.0cm}
+\begin{tikzpicture}[x=1.1cm,y=1.1cm]
+  \draw[axis] (-0.3,0) -- (2.9,0);
+  \draw[axis] (0,-0.3) -- (0,2.2);
+  \draw[very thick,blue!60!black,domain=0.15:2.6,samples=50,smooth]
+      plot (\x,{0.32*\x*\x});
+  \draw[thick,red!70!black] (0.5,0.08) -- (2.4,1.843);
+  \fill (0.5,0.08) circle (1.3pt); \fill (2.4,1.843) circle (1.3pt);
+  \fill (1.45,0.6728) circle (1.3pt);
+  \draw[dashed] (1.45,0.6728) -- (1.45,0.9615);
+  \fill[red!70!black] (1.45,0.9615) circle (1.3pt);
+  \node[font=\scriptsize,anchor=west] at (1.5,0.82) {gap};
+  \node[font=\scriptsize] at (1.5,-0.6) {chord above graph};
+\end{tikzpicture}
+\caption{Left: exercises 4.4--4.6. A corner is \emph{seen}, and seeing it is legitimate
+provided one writes the residue, the two one-sided limits of the difference quotient.
+Right: exercise 4.13, midpoint convexity: the midpoint of a chord lies above the graph.
+The picture is the whole idea; the residue -- that midpoint convexity plus continuity
+gives full convexity -- is a dyadic-density argument that no picture supplies. This is a
+good example of a statement that is \emph{drawable but not provable by drawing}.}
+\label{fig:diffconv}
+\end{figure}

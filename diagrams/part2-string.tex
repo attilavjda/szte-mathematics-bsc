@@ -1,0 +1,208 @@
+% ==========================================================================
+\section{Language B: string diagrams and graphical linear algebra}
+\label{sec:string}
+
+\paragraph{Marks.} Wires (objects/types) and boxes (morphisms). Reading left to right is
+composition $f\,;g$; stacking vertically is the monoidal product $f\otimes g$.
+\paragraph{Legal moves.} Any planar deformation that does not cut a wire, does not change
+the order of the endpoints on the boundary, and does not pull a box through another; plus
+the equations of whatever generators you have adopted.
+\paragraph{Soundness.} The coherence theorem for monoidal categories (Joyal--Street): two
+string diagrams are related by planar isotopy \emph{if and only if} the terms they denote
+are equal. This is the strongest guarantee any of our languages has: here you may
+\emph{compute} by sliding pictures.
+
+\subsection{The grammar in one figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm,baseline=(current bounding box.center)]
+  \node[box] (f) at (1,0) {$f$};
+  \node[box] (g) at (3,0) {$g$};
+  \draw[wire] (0,0) -- (f); \draw[wire] (f) -- (g); \draw[wire] (g) -- (4,0);
+  \node[below=1pt] at (0.45,-0.15) {\scriptsize $X$};
+  \node[below=1pt] at (2.0,-0.15) {\scriptsize $Y$};
+  \node[below=1pt] at (3.6,-0.15) {\scriptsize $Z$};
+  \node at (2,-1.1) {$f\,;g$ (do $f$, then $g$)};
+\end{tikzpicture}
+\hspace{1.1cm}
+\begin{tikzpicture}[x=1cm,y=1cm,baseline=(current bounding box.center)]
+  \node[box] (f) at (1,0.5) {$f$};
+  \node[box] (g) at (1,-0.5) {$g$};
+  \draw[wire] (0,0.5) -- (f); \draw[wire] (f) -- (2,0.5);
+  \draw[wire] (0,-0.5) -- (g); \draw[wire] (g) -- (2,-0.5);
+  \node at (1,-1.6) {$f\otimes g$ (do both, in parallel)};
+\end{tikzpicture}
+\caption{The two ways of putting boxes together. Everything below is built from these.}
+\label{fig:strgrammar}
+\end{figure}
+
+\subsection{The inverse, drawn: a box that disappears}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm,baseline=(current bounding box.center)]
+  \node[box] (f) at (1,0) {$f$};
+  \node[box] (g) at (2.4,0) {$g$};
+  \draw[wire] (0,0) -- (f); \draw[wire] (f) -- (g); \draw[wire] (g) -- (3.4,0);
+  \node at (4.1,0) {$=$};
+  \draw[wire] (4.7,0) -- (6.6,0);
+  \node at (3.3,-1.0) {$f\,;g=\id_X$};
+\end{tikzpicture}
+\caption{``Inverse'' in string-diagram language: a pair of boxes that can be erased,
+leaving a bare wire. The bare wire is the identity, so \emph{nothing happens} -- which is
+exactly what $\exp$ followed by $\log$, or $M$ followed by $M^{-1}$, does.}
+\label{fig:strinv}
+\end{figure}
+
+Now a proof performed entirely by pictures. The statement is the ``socks and shoes''
+rule $(f\,;g)^{-1}=g^{-1}\,;f^{-1}$, which is exercise-level material in both courses
+($(AB)^{-1}=B^{-1}A^{-1}$ for matrices; $(f\circ g)^{-1}=g^{-1}\circ f^{-1}$ for
+bijections).
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \node[box] (f) at (0.9,0) {$f$};
+  \node[box] (g) at (2.1,0) {$g$};
+  \node[box] (gi) at (3.4,0) {$g^{-1}$};
+  \node[box] (fi) at (5.2,0) {$f^{-1}$};
+  \draw[wire] (0,0) -- (f); \draw[wire] (f) -- (g); \draw[wire] (g) -- (gi);
+  \draw[wire] (gi) -- (fi); \draw[wire] (fi) -- (6.2,0);
+  \draw[dashed,gray] (2.6,0.6) rectangle (4.2,-0.6);
+  \node[gray,font=\scriptsize] at (3.4,0.85) {erase};
+  %
+  \node at (6.8,0) {$=$};
+  \node[box] (f2) at (8.0,0) {$f$};
+  \node[box] (fi2) at (9.6,0) {$f^{-1}$};
+  \draw[wire] (7.3,0) -- (f2); \draw[wire] (f2) -- (fi2); \draw[wire] (fi2) -- (10.6,0);
+  \draw[dashed,gray] (7.45,0.6) rectangle (10.2,-0.6);
+  %
+  \node at (11.2,0) {$=$};
+  \draw[wire] (11.7,0) -- (13.1,0);
+\end{tikzpicture}
+\caption{A complete proof with no symbols: erase the inner cancelling pair, then the
+outer one, and a bare wire remains. Hence $g^{-1};f^{-1}$ really is the inverse of
+$f;g$. The only rule used is Figure~\ref{fig:strinv}, applied inside a larger diagram --
+legal because composition is associative.}
+\label{fig:socks}
+\end{figure}
+
+\subsection{Graphical linear algebra: wires that copy and add}
+
+The website \url{https://graphicallinearalgebra.net/} develops all of linear algebra in
+this language. The point is that one does not need boxes for matrices at all: four
+generators suffice.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  % copy
+  \node[dot] (c) at (0.9,0) {};
+  \draw[wire] (0,0) -- (c); \draw[wire] (c) -- (1.8,0.5); \draw[wire] (c) -- (1.8,-0.5);
+  \node[font=\scriptsize] at (0.9,-1.1) {copy};
+  % discard
+  \node[dot] (d) at (3.6,0) {};
+  \draw[wire] (2.9,0) -- (d);
+  \node[font=\scriptsize] at (3.4,-1.1) {discard};
+  % add
+  \node[odot] (a) at (6.0,0) {};
+  \draw[wire] (5.1,0.5) -- (a); \draw[wire] (5.1,-0.5) -- (a); \draw[wire] (a) -- (6.9,0);
+  \node[font=\scriptsize] at (6.0,-1.1) {add};
+  % zero
+  \node[odot] (z) at (8.2,0) {};
+  \draw[wire] (z) -- (9.1,0);
+  \node[font=\scriptsize] at (8.6,-1.1) {zero};
+  % scalar
+  \node[box] (s) at (11.0,0) {$\lambda$};
+  \draw[wire] (10.1,0) -- (s); \draw[wire] (s) -- (11.9,0);
+  \node[font=\scriptsize] at (11.0,-1.1) {scalar};
+\end{tikzpicture}
+\caption{The generators of graphical linear algebra. A black node copies a value, a white
+node adds two values; the degenerate cases discard and produce~$0$. Every linear map is a
+diagram built from these, and \emph{every} true equation between linear maps follows from
+a short list of picture equations (the two monoid/comonoid laws plus the bimonoid laws).}
+\label{fig:glagens}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \node[dot] (c1) at (1.0,1.0) {};
+  \node[dot] (c2) at (1.0,-1.0) {};
+  \node[box] (a) at (2.6,1.55) {$a$};
+  \node[box] (b) at (2.6,0.45) {$b$};
+  \node[box] (cc) at (2.6,-0.45) {$c$};
+  \node[box] (d) at (2.6,-1.55) {$d$};
+  \node[odot] (s1) at (4.3,1.0) {};
+  \node[odot] (s2) at (4.3,-1.0) {};
+  \draw[wire] (0,1.0) node[left]{$x_1$} -- (c1);
+  \draw[wire] (0,-1.0) node[left]{$x_2$} -- (c2);
+  \draw[wire] (c1) -- (1.9,1.55); \draw[wire] (1.9,1.55) -- (a);
+  \draw[wire] (c2) -- (1.9,0.45); \draw[wire] (1.9,0.45) -- (b);
+  \draw[wire] (c1) -- (1.9,-0.45); \draw[wire] (1.9,-0.45) -- (cc);
+  \draw[wire] (c2) -- (1.9,-1.55); \draw[wire] (1.9,-1.55) -- (d);
+  \draw[wire] (a) -- (3.6,1.55) -- (s1);
+  \draw[wire] (b) -- (3.6,0.45) -- (s1);
+  \draw[wire] (cc) -- (3.6,-0.45) -- (s2);
+  \draw[wire] (d) -- (3.6,-1.55) -- (s2);
+  \draw[wire] (s1) -- (5.3,1.0) node[right]{$ax_1+bx_2$};
+  \draw[wire] (s2) -- (5.3,-1.0) node[right]{$cx_1+dx_2$};
+\end{tikzpicture}
+\caption{The matrix $\begin{psmallmatrix}a&b\\c&d\end{psmallmatrix}$ as a diagram: copy
+each input, scale, add. Matrix multiplication is \emph{plugging diagrams together};
+associativity of matrix multiplication is the (invisible) fact that plugging is
+associative. Non-degeneracy has a diagrammatic meaning too: the diagram is invertible
+exactly when the wires can be re-routed backwards, i.e.\ when $\det\neq0$. Certified in
+\lean{DiagramProofs.det\_ne\_zero\_iff\_bijective}.}
+\label{fig:matdiag}
+\end{figure}
+
+\subsection{Bending wires: the snake, and why transposes exist}
+
+In a compact closed category (finite-dimensional vector spaces, or relations) wires may
+be bent. The \emph{cup} and \emph{cap} satisfy the yanking equation:
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[wire] (0,1) -- (2,1) arc (90:-90:0.5) -- (1,0) arc (90:270:0.5) -- (3,-1);
+  \node at (3.9,0) {$=$};
+  \draw[wire] (4.5,0) -- (6.5,0);
+  \node[font=\scriptsize,gray] at (1.0,1.35) {a zig and a zag \dots};
+  \node[font=\scriptsize,gray] at (5.5,0.4) {\dots\ pull straight};
+\end{tikzpicture}
+\caption{The snake (yanking) equation. It is the reason a finite-dimensional space is
+isomorphic to its double dual, and the reason ``transpose'' can be defined by
+\emph{rotating a box}: $M^{\mathsf T}$ is $M$ turned around using a cup and a cap. In this
+language $\langle Mu,v\rangle=\langle u,M^{\mathsf T}v\rangle$ is not a calculation, it is
+a deformation.}
+\label{fig:snake}
+\end{figure}
+
+\subsection{Can the triangle inequality be drawn as a string diagram?}
+
+Yes, but one dimension higher. In $\Met$ an inequality is not an equation between
+diagrams, it is a \emph{2-cell} between them: a shaded surface whose boundary is the two
+paths being compared.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \fill[blue!10] (0,0) -- (2,1.2) -- (4,0) -- cycle;
+  \draw[vec] (0,0) -- (2,1.2); \draw[vec] (2,1.2) -- (4,0);
+  \draw[vec] (0,0) -- (4,0);
+  \fill (0,0) circle (1.6pt) node[left]{$x$};
+  \fill (2,1.2) circle (1.6pt) node[above]{$y$};
+  \fill (4,0) circle (1.6pt) node[right]{$z$};
+  \node at (2,0.42) {$\Downarrow$};
+  \node[font=\scriptsize] at (2.62,0.42) {$\le$};
+\end{tikzpicture}
+\caption{An inequality drawn as a 2-cell: the shaded region is a witness that the
+straight path is \emph{cheaper than or equal to} the detour. Composing 2-cells vertically
+is transitivity of $\le$; composing them horizontally is the compatibility of $\le$ with
+$+$. This is the picture version of the enrichment used in
+\lean{TriangleOverlap.LawvereSpace}, and the reason chains of estimates may be pasted
+like commutative squares.}
+\label{fig:2cell}
+\end{figure}

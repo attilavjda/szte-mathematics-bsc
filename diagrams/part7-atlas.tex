@@ -1,0 +1,176 @@
+% ==========================================================================
+\section{What can actually be proved with drawings alone}
+\label{sec:whatprovable}
+
+It is useful to sort undergraduate statements into three tiers.
+
+\paragraph{Tier 1 -- complete diagrammatic proofs.}
+Here a drawing is a proof outright, because the language is certified.
+\begin{itemize}\itemsep2pt
+\item \emph{Anything about composition and inverses}: uniqueness of the inverse,
+  $(fg)^{-1}=g^{-1}f^{-1}$, ``a composite of injections is injective'', ``an isomorphism
+  is preserved by any functor'', $f^{-1}=f$ for an involution
+  (Figures~\ref{fig:invunique}, \ref{fig:socks}, \ref{fig:injcomp}, \ref{fig:mirror}).
+\item \emph{Equational linear algebra}: every identity between matrices built from
+  addition, copying, scaling and composition, proved by deforming a diagram
+  (Figures~\ref{fig:glagens}, \ref{fig:matdiag}, \ref{fig:snake}).
+\item \emph{Propositional and first-order logic}: Peirce's existential graphs are a
+  complete calculus (Figure~\ref{fig:peirce}); the quantifier reformulations of exercise
+  1.7 live here.
+\item \emph{Finite Boolean set algebra and syllogisms}: Venn diagrams decide them.
+\item \emph{Order reasoning}: any chain of $\le$'s, i.e.\ transitivity used $n$ times
+  (Figure~\ref{fig:hasse}).
+\item \emph{Solution sets of rational inequalities}: the sign line is a decision
+  procedure (Figure~\ref{fig:signline}), as are the interval and fold pictures for nested
+  absolute values (Figures~\ref{fig:epsint}--\ref{fig:fold}).
+\item \emph{Graph transformations and inverses by mirror}: exercises 2.16 and 2.3--2.9
+  (Figures~\ref{fig:mirror}, \ref{fig:transf}).
+\end{itemize}
+
+\paragraph{Tier 2 -- a picture plus a one-line residue.}
+The picture carries the idea; one line of symbols closes the gap. This is the tier that
+an exam should aim at.
+\begin{itemize}\itemsep2pt
+\item Triangle inequality on the line: residue = the two sign cases
+  (Figure~\ref{fig:absline}).
+\item AM--GM, Cauchy--Schwarz: residue = ``altitude $\le$ radius'', ``leg $\le$
+  hypotenuse'' (Figures~\ref{fig:amgm}, \ref{fig:cs}).
+\item Finite sums by dissection: residue = the tiling is exact for every $n$
+  (Figure~\ref{fig:sums}).
+\item $\varepsilon$--$\delta$ for a concrete function: residue = a formula for $\delta$
+  (Figure~\ref{fig:epsdelta}).
+\item Monotonicity, extrema, convexity from a sketch: residue = the sign of $f'$, or the
+  completed square (Figures~\ref{fig:hlt}, \ref{fig:optsq}, \ref{fig:diffconv}).
+\item Induction: residue = the induction step, which is itself one picture
+  (Figure~\ref{fig:dominoes}).
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \foreach \i in {0,1,2,3,4,5}{
+    \draw[thick,fill=blue!12,rotate around={-18:(0.85*\i,0)}]
+        (0.85*\i-0.13,0) rectangle (0.85*\i+0.13,1.0);}
+  \draw[-{Stealth[length=2mm]},thick,red!70!black] (-0.7,1.25) -- (-0.2,1.0);
+  \node[font=\scriptsize,red!70!black,anchor=east] at (-0.75,1.3) {base case};
+  \draw[decorate,decoration={brace,amplitude=4pt,mirror}] (0.6,-0.35) -- (1.45,-0.35)
+      node[midway,below,font=\scriptsize]{step $n\to n+1$};
+  \node[font=\scriptsize,anchor=west] at (4.9,0.6) {$\cdots$ all $n$};
+\end{tikzpicture}
+\caption{Induction drawn (exercises 1.14, 1.15): one push, and one guarantee that each
+domino topples the next. The picture is faithful -- it is the recursion diagram for $\N$
+-- but the \emph{step} still has to be established, usually algebraically. What the
+picture buys is that you never have to explain the logic of induction, only the step.}
+\label{fig:dominoes}
+\end{figure}
+
+\paragraph{Tier 3 -- not accessible to pictures.}
+\begin{itemize}\itemsep2pt
+\item Irrationality of $\sqrt2$ (1.9) and Diophantine approximation (1.10): statements
+  about the \emph{absence} of a representation. There is a well-known ``proof without
+  words'' for the irrationality of $\sqrt2$ by infinite descent on similar triangles, but
+  it needs the additional non-visual principle that a decreasing sequence of positive
+  integers terminates.
+\item Statements quantified over all reals with no finite geometric content: exercise
+  3.15 ($f=g$ on $\mathbb{Q}$ and both continuous $\Rightarrow f=g$), 3.14 (a bounded
+  monotone function has a one-sided limit), 4.13 (midpoint convexity plus continuity gives
+  convexity). Each is a density argument; density is not drawable.
+\item Existence of the supremum, i.e.\ completeness of $\R$ (behind 1.4, 1.5): the
+  picture of a ``leftmost upper bound'' presupposes exactly what is to be proved.
+\item Symbolic computation: the derivative tables of 4.2--4.3, the limits of 3.3--3.10,
+  the L'Hospital exercises 4.10. A picture may predict the answer -- degree comparison for
+  a rational limit is genuinely visual -- but not produce it.
+\item Anything involving a set that may not exist (1.1, 1.2).
+\end{itemize}
+
+% ==========================================================================
+\section{Atlas: the exercises of \texorpdfstring{\lean{kalkulus\_gyakorlo.pdf}}{kalkulus gyakorlo.pdf}}
+\label{sec:atlas}
+
+\newcommand{\Yes}{\textbf{1}}
+\newcommand{\Res}{\textbf{2}}
+\newcommand{\No}{\textbf{3}}
+
+\begin{center}
+\small
+\begin{longtable}{@{}p{1.5cm}p{4.6cm}p{3.5cm}c p{4.0cm}@{}}
+\toprule
+Exercise & Statement & Draw it as & Tier & Residue / certified in \\
+\midrule
+\endhead
+1.1, 1.2 & is it a set? & (Euler diagram fails) & \No & presupposition, not content \\
+1.3 & name the number sets & nested Euler blobs, Fig.~\ref{fig:venn} & \Yes & --- \\
+1.4, 1.5 & bounds, uniqueness of $\sup$ & number line, Fig.~\ref{fig:sup} & \Res &
+  antisymmetry of $\le$ \\
+1.6 & the frog and the halves & square dissection, Fig.~\ref{fig:geom} & \Res &
+  partial sums vs.\ limit \\
+1.7 & rewrite with quantifiers & existential graph, Fig.~\ref{fig:peirce} & \Yes & --- \\
+1.9 & $\sqrt2\notin\mathbb{Q}$ & --- & \No & infinite descent \\
+1.11 & $\bigl||x|-|y|\bigr|\le|x-y|$ & triangle $0,x,y$, Fig.~\ref{fig:lawvere} & \Res &
+  \lean{abs\_abs\_sub\_abs\_le} \\
+1.12 a,b,i & absolute-value inequalities & interval / fold,
+  Figs.~\ref{fig:epsint}--\ref{fig:fold} & \Yes &
+  \lean{abs\_sub\_le\_iff\_mem\_Icc}, \lean{abs\_add\_gt\_iff} \\
+1.12 c--g & rational inequalities & sign line, Fig.~\ref{fig:signline} & \Yes &
+  sign of each linear factor \\
+1.13 & $|\sum a_i|\le\sum|a_i|$ & polygonal chain, Fig.~\ref{fig:chain} & \Res &
+  \lean{abs\_sum\_range\_le\_sum\_abs} \\
+1.14 a & $\sum i=n(n+1)/2$ & two staircases, Fig.~\ref{fig:sums} & \Res & tiling exact
+  for all $n$ \\
+1.14 c & geometric sum & halving square, Fig.~\ref{fig:geom} & \Res & closed form \\
+1.15 & induction inequalities & dominoes, Fig.~\ref{fig:dominoes} & \Res & the step \\
+1.16 & $\sum i^{2}$ ``szavak n\'elk\"ul'' & rotated triangular arrays,
+  Fig.~\ref{fig:sums} & \Res & \lean{six\_mul\_sum\_sq} \\
+1.18 & $|x_n-\sqrt2|<2^{-n}$ & cobweb, Fig.~\ref{fig:cobweb} & \Res & contraction
+  estimate \\
+1.19 & binomial identities & Pascal triangle / lattice paths & \Res & path counting
+  bijection \\
+2.1 & domains & sign line for the radicand & \Yes & --- \\
+2.2, 2.6 & injective? surjective? & bags, Fig.~\ref{fig:bags}; horizontal line test,
+  Fig.~\ref{fig:hlt} & \Res & \lean{strictMono\_injective} \\
+2.3--2.5, 2.8, 2.9 & find $f^{-1}$ & mirror in $y=x$, Fig.~\ref{fig:mirror} & \Res &
+  the algebra of solving $y=f(x)$ \\
+2.7 & $f^{-1}=f$ & graph symmetric in $y=x$, Fig.~\ref{fig:mirror} & \Res &
+  \lean{self\_inverse\_2\_7} \\
+2.10, 2.13 & composites & two graphs and the diagonal, Fig.~\ref{fig:cobweb} & \Yes &
+  domains \\
+2.11 & $f\circ g=g\circ f$ & commuting square & \Res & \lean{chebyshev\_square} \\
+2.12 & fill in the table & string diagram of boxes, Fig.~\ref{fig:strgrammar} & \Yes &
+  --- \\
+2.16 & elementary transformations & pipeline of moves, Fig.~\ref{fig:transf} & \Yes &
+  --- \\
+2.17, 2.18 & injectivity of $f+g$, $f\circ g$ & bags, Fig.~\ref{fig:injcomp} & \Yes &
+  \lean{injective\_comp}; for $f+g$ a counterexample sketch \\
+2.19 & $\le n$ roots & graph crossings & \No & factor theorem, induction \\
+2.20 & extrema of a cubic & sign line for $f'$ & \Res & the sign computation \\
+3.1 & $\varepsilon$--$\delta$ & band and strip, Fig.~\ref{fig:epsdelta} & \Res &
+  \lean{tendsto\_3\_1a} \\
+3.2, 3.3 & limits at $\infty$ & compare growth: leading terms & \Res & division by the
+  dominant power \\
+3.5, 3.6, 3.11 & one-sided limits, jumps & piecewise graph & \Res & the two one-sided
+  values \\
+3.12, 3.13 & make it continuous & join the two pieces & \Yes & solve for the parameter \\
+3.14, 3.15 & bounded monotone; density & --- & \No & completeness, density \\
+4.1 & derivative from the definition & secant turning into tangent & \Res & the limit
+  computation \\
+4.4--4.7 & differentiable? & corner / cusp, Fig.~\ref{fig:diffconv} & \Res & one-sided
+  derivatives \\
+4.8 & full curve discussion & sign rows for $f'$, $f''$ $\rightarrow$ shape & \Res & the
+  two sign computations \\
+4.9 & extrema on an interval & graph on the closed interval & \Res & endpoints and
+  critical points \\
+4.11 & split $20$ & square vs.\ rectangle, Fig.~\ref{fig:optsq} & \Res &
+  \lean{split\_twenty\_max\_product} \\
+4.12, 4.14, 4.15 & geometric optimisation & superposition of the family & \Res & the
+  extremal member \\
+4.13 & midpoint convexity & chord above graph, Fig.~\ref{fig:diffconv} & \No & dyadic
+  density \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\noindent
+Tier \Yes: the drawing is the proof. Tier \Res: drawing plus one line. Tier \No: the
+drawing is at best a mnemonic. Roughly one third of the sheet is tier~1, one half is
+tier~2, and the rest genuinely needs symbols -- which is a fair estimate of how far
+``draw it'' will take a first-year student.

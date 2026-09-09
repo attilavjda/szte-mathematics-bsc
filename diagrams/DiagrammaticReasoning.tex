@@ -1,0 +1,66 @@
+% Compile with: tectonic DiagrammaticReasoning.tex   (or xelatex/pdflatex twice)
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{arrows.meta,calc,positioning,decorations.pathreplacing,decorations.markings,
+  patterns,shapes.geometric,fit,backgrounds,intersections}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,
+  citecolor=blue!50!black]{hyperref}
+
+\theoremstyle{definition}
+\newtheorem{recipe}{Recipe}[section]
+\theoremstyle{plain}
+\newtheorem{claim}{Claim}[section]
+\theoremstyle{remark}
+\newtheorem{trap}{Trap}[section]
+
+\newcommand{\dd}{\operatorname{d}}
+\newcommand{\Met}{\mathbf{Met}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\lean}[1]{\texttt{#1}}
+\newcommand{\norm}[1]{\lVert #1\rVert}
+
+\tikzset{
+  box/.style   = {draw, thick, fill=white, minimum width=9mm, minimum height=7mm,
+                  rounded corners=1pt},
+  wire/.style  = {thick},
+  dot/.style   = {circle, fill=black, inner sep=2.1pt},
+  odot/.style  = {circle, draw, thick, fill=white, inner sep=2.1pt},
+  vec/.style   = {-{Stealth[length=2.5mm]}, very thick},
+  axis/.style  = {-{Stealth[length=2mm]}, gray!60!black},
+}
+
+\title{\bfseries Drawing the two overlaps\\[2mm]
+\large Diagrammatic reasoning about the \emph{triangle inequality} and the \emph{inverse},
+with a picture atlas for \emph{Kalkulus I} and \emph{Line\'aris algebra I}}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-10mm}
+
+\input{part0-intro}
+\input{part1-catdiag}
+\input{part2-string}
+\input{part3-nelsen}
+\input{part4-numberline}
+\input{part5-graphs}
+\input{part6-euler}
+\input{part7-atlas}
+\input{part8-exam}
+
+\end{document}

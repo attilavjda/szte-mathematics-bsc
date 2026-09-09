@@ -1,0 +1,195 @@
+% ==========================================================================
+\section{Language D: the number line and $\varepsilon$-intervals}
+\label{sec:numberline}
+
+\paragraph{Marks.} Points, brackets, shaded intervals, and \emph{sign rows} under a line.
+\paragraph{Legal moves.} Translate ($x\mapsto x-c$), reflect ($x\mapsto-x$), scale by a
+positive factor, fold ($x\mapsto|x|$), intersect / unite / complement shaded sets.
+\paragraph{Soundness.} High, and this is worth stressing: each move is an order
+isomorphism (or, for the fold, a two-to-one map with an explicit inverse image), so the
+picture transforms the \emph{solution set} correctly. The only residue is the open/closed
+status of each endpoint. This makes the number line the most reliable of the heuristic
+languages -- for the entire first exercise sheet, drawing really is solving.
+
+\subsection{$|x-c|\le\varepsilon$ is a picture, not a computation}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[axis] (-0.4,0) -- (9,0);
+  \fill[blue!15] (2.4,-0.22) rectangle (7.0,0.22);
+  \draw[thick,blue!60!black] (2.4,0) -- (7.0,0);
+  \foreach \p/\l in {2.4/{c-\varepsilon}, 4.7/{c}, 7.0/{c+\varepsilon}}
+     {\draw[thick] (\p,-0.22) -- (\p,0.22); \node[below=4pt,font=\scriptsize] at (\p,-0.2) {$\l$};}
+  \draw[decorate,decoration={brace,amplitude=4pt}] (2.4,0.35) -- (4.7,0.35)
+      node[midway,above,font=\scriptsize]{$\varepsilon$};
+  \draw[decorate,decoration={brace,amplitude=4pt}] (4.7,0.35) -- (7.0,0.35)
+      node[midway,above,font=\scriptsize]{$\varepsilon$};
+\end{tikzpicture}
+\caption{$|x-c|\le\varepsilon\iff x\in[c-\varepsilon,c+\varepsilon]$. Exercise 1.12 i)
+($c=5$) is answered by drawing this and reading the two endpoints; no algebra occurs.
+Certified in \lean{DiagramProofs.abs\_sub\_le\_iff\_mem\_Icc}.}
+\label{fig:epsint}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=0.62cm,y=1cm]
+  \draw[axis] (-9.6,0) -- (5.2,0);
+  \fill[red!15] (-9.4,-0.18) rectangle (-6,0.18);
+  \fill[red!15] (2,-0.18) rectangle (5,0.18);
+  \draw[very thick,red!60!black] (-9.4,0) -- (-6,0);
+  \draw[very thick,red!60!black] (2,0) -- (5,0);
+  \draw[fill=white,thick] (-6,0) circle (2.4pt);
+  \draw[fill=white,thick] (2,0) circle (2.4pt);
+  \foreach \p/\l in {-6/{-6}, -2/{-2}, 2/{2}}
+     {\node[below=4pt,font=\scriptsize] at (\p,-0.15) {$\l$};}
+  \fill (-2,0) circle (1.6pt);
+  \node[font=\scriptsize,anchor=south] at (-2,0.25) {centre $-2$};
+  \draw[decorate,decoration={brace,amplitude=4pt}] (-6,0.55) -- (-2,0.55)
+      node[midway,above,font=\scriptsize]{$4$};
+  \draw[decorate,decoration={brace,amplitude=4pt}] (-2,0.55) -- (2,0.55)
+      node[midway,above,font=\scriptsize]{$4$};
+\end{tikzpicture}
+\caption{Exercise 1.12 a), $|x+2|>4$: the solution set is the \emph{complement} of the
+closed interval of radius $4$ about the centre $-2$, i.e.\ $x<-6$ or $x>2$. Open circles
+record the residue (strict inequality). Certified in \lean{DiagramProofs.abs\_add\_gt\_iff}.}
+\label{fig:twoRays}
+\end{figure}
+
+\subsection{Nested absolute values: pulling an interval back through a fold}
+
+Exercise 1.12 b), $\bigl||x+2|-6\bigr|<1$, is the composite of three moves, each of which
+is one picture: translate by $-2$, fold, translate by $-6$. Reading the picture backwards
+solves the exercise.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=0.44cm,y=1cm]
+  % upper line: t = |x+2|
+  \draw[axis] (-1,2.4) -- (12,2.4);
+  \node[font=\scriptsize,anchor=west] at (12.1,2.4) {$t=|x+2|$};
+  \fill[blue!20] (5,2.26) rectangle (7,2.54);
+  \draw[very thick,blue!60!black] (5,2.4) -- (7,2.4);
+  \foreach \p in {5,6,7} {\draw (\p,2.28) -- (\p,2.52);}
+  \node[font=\scriptsize,below=3pt] at (5,2.3) {$5$};
+  \node[font=\scriptsize,below=3pt] at (6,2.3) {$6$};
+  \node[font=\scriptsize,below=3pt] at (7,2.3) {$7$};
+  % lower line: x
+  \draw[axis] (-11,0) -- (12,0);
+  \node[font=\scriptsize,anchor=west] at (12.1,0) {$x$};
+  \fill[blue!20] (-9,-0.14) rectangle (-7,0.14);
+  \fill[blue!20] (3,-0.14) rectangle (5,0.14);
+  \draw[very thick,blue!60!black] (-9,0) -- (-7,0);
+  \draw[very thick,blue!60!black] (3,0) -- (5,0);
+  \foreach \p/\l in {-9/{-9},-7/{-7},-2/{-2},3/{3},5/{5}}
+     {\draw (\p,-0.13) -- (\p,0.13); \node[font=\scriptsize,below=3pt] at (\p,-0.1) {$\l$};}
+  % the fold arrows
+  \draw[-{Stealth[length=2mm]},gray!70!black] (4,0.3) -- (6,2.2);
+  \draw[-{Stealth[length=2mm]},gray!70!black] (-8,0.3) -- (6,2.2);
+  \node[font=\scriptsize,gray!60!black] at (-1.5,1.6) {fold $x\mapsto|x+2|$};
+\end{tikzpicture}
+\caption{$\bigl||x+2|-6\bigr|<1$ means $t\in(5,7)$ upstairs. The fold has two branches, so
+the preimage downstairs is \emph{two} intervals, $(-9,-7)$ and $(3,5)$. Forgetting the
+left branch is the standard mistake, and the picture is what prevents it.}
+\label{fig:fold}
+\end{figure}
+
+\subsection{Sign lines: rational inequalities are decided by a drawing}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.25cm,y=0.62cm]
+  \foreach \r/\lab in {0/{-2},1/{3},2/{4},3/{8}} {}
+  % axis
+  \draw[axis] (-1.2,0) -- (4.6,0);
+  \foreach \p/\l in {0/{-2},1/{3},2/{4},3/{8}}
+    {\fill (\p,0) circle (1.5pt); \node[font=\scriptsize,below=3pt] at (\p,0) {$\l$};}
+  % rows
+  \foreach \y/\name/\s in {1.4/{x+2}/{-,+,+,+,+}, 2.4/{x-3}/{-,-,+,+,+},
+                           3.4/{x-4}/{-,-,-,+,+}, 4.4/{x-8}/{-,-,-,-,+}}
+  {
+    \node[font=\scriptsize,anchor=east] at (-1.3,\y) {$\name$};
+    \draw[gray!50] (-1.2,\y) -- (4.6,\y);
+  }
+  \foreach \x/\a/\b/\c/\d in {-0.6/-/-/-/-, 0.5/+/-/-/-, 1.5/+/+/-/-, 2.5/+/+/+/-, 3.9/+/+/+/+}
+  {
+    \node[font=\scriptsize] at (\x,1.4) {$\a$};
+    \node[font=\scriptsize] at (\x,2.4) {$\b$};
+    \node[font=\scriptsize] at (\x,3.4) {$\c$};
+    \node[font=\scriptsize] at (\x,4.4) {$\d$};
+  }
+  \node[font=\scriptsize,anchor=east] at (-1.3,5.5) {quotient};
+  \draw[gray!50] (-1.2,5.5) -- (4.6,5.5);
+  \foreach \x/\s in {-0.6/+, 0.5/-, 1.5/+, 2.5/-, 3.9/+}
+    {\node[font=\scriptsize] at (\x,5.5) {$\s$};}
+  \fill[red!15] (0,5.2) rectangle (1,5.8);
+  \fill[red!15] (2,5.2) rectangle (3,5.8);
+  \foreach \x/\s in {0.5/-, 2.5/-} {\node[font=\scriptsize] at (\x,5.5) {$\s$};}
+\end{tikzpicture}
+\caption{Exercise 1.12 g), $\dfrac{(x-3)(x+2)}{(x-4)(x-8)}<0$. Mark the four critical
+points, draw one row per factor recording its sign, multiply the columns. The shaded
+columns are the answer, $(-2,3)\cup(4,8)$. This drawing is a genuine \emph{decision
+procedure}: the residue is only that each linear factor changes sign exactly once, at its
+root.}
+\label{fig:signline}
+\end{figure}
+
+\subsection{$\varepsilon$--$\delta$ as a band and a strip}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=14cm,y=20cm]
+  \fill[blue!12] (0.865,0.3133) rectangle (1.20,0.3533);
+  \fill[red!12]  (0.96,0.263) rectangle (1.04,0.392);
+  \draw[axis] (0.85,0.263) -- (1.225,0.263);
+  \draw[axis] (0.865,0.263) -- (0.865,0.395);
+  \draw[very thick,domain=0.87:1.20,samples=60,smooth] plot (\x,{1/(\x*\x*\x+2)});
+  \draw[dashed] (0.865,0.3333) -- (1.20,0.3333);
+  \draw[dashed] (1,0.263) -- (1,0.3333);
+  \node[font=\scriptsize,anchor=east] at (0.862,0.3333) {$\frac13$};
+  \node[font=\scriptsize,anchor=north] at (1,0.261) {$1$};
+  \node[font=\scriptsize,anchor=north] at (0.955,0.261) {$1-\delta$};
+  \node[font=\scriptsize,anchor=north] at (1.048,0.261) {$1+\delta$};
+  \node[font=\scriptsize,anchor=west,blue!50!black] at (1.205,0.3333) {$\varepsilon$-band};
+  \node[font=\scriptsize,anchor=south,red!50!black] at (1.0,0.393) {$\delta$-strip};
+\end{tikzpicture}
+\caption{$\lim_{x\to1}\frac{1}{x^{3}+2}=\frac13$ (exercise 3.1 a) drawn: given any
+horizontal band of half-width $\varepsilon$ around $\frac13$, the graph over a
+sufficiently narrow vertical strip around $1$ stays inside the band. The picture shows
+the \emph{shape} of the quantifier alternation $\forall\varepsilon\,\exists\delta$; the
+residue is the formula for $\delta$ in terms of $\varepsilon$, or the one-line remark
+that the function is continuous at $1$. Certified in \lean{DiagramProofs.tendsto\_3\_1a}.}
+\label{fig:epsdelta}
+\end{figure}
+
+\begin{recipe}[The $\varepsilon$-neighbourhood dictionary]
+\emph{Everything} in the limit chapter is one of four pictures:
+$|x-c|<\delta$ (a strip), $|f(x)-L|<\varepsilon$ (a band), $x>K$ (a ray), $|f(x)|>M$
+(the complement of a band). Translate the statement into pictures first; the quantifier
+order becomes ``which box is drawn first''. Certified only up to the residue, but the
+residue is short and mechanical.
+\end{recipe}
+
+\subsection{Uniqueness of the supremum, drawn (exercise 1.5)}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[axis] (-0.4,0) -- (9,0);
+  \fill[blue!15] (0.6,-0.16) rectangle (4.6,0.16);
+  \node[font=\scriptsize,blue!50!black] at (2.4,0.5) {$H$ (bounded above)};
+  \draw[decorate,decoration={brace,amplitude=4pt,mirror}] (4.6,-0.3) -- (8.6,-0.3)
+      node[midway,below,font=\scriptsize]{upper bounds of $H$};
+  \fill (4.6,0) circle (2pt);
+  \node[font=\scriptsize,anchor=south] at (4.6,0.2) {$s$};
+  \fill (5.9,0) circle (2pt);
+  \node[font=\scriptsize,anchor=south] at (5.9,0.2) {$s'$};
+\end{tikzpicture}
+\caption{The supremum is the \emph{leftmost} point of the set of upper bounds. If $s$ and
+$s'$ are both leftmost then each lies weakly to the left of the other, so they coincide:
+uniqueness of the supremum is the observation that a set of reals has at most one
+leftmost point. Exercise 1.5 needs no more than this picture plus the antisymmetry of
+$\le$.}
+\label{fig:sup}
+\end{figure}
