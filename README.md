@@ -17,6 +17,7 @@ Az SZTE BSc matematika kurzusát csinálom, és a tárgyakat amiket felvettem go
 - Lineáris Algebra I
 
 Ezeket nem vettem fel, de érdekesnek tűnnek:
+
 - Logika és Informatikai Alkalmazásai
 - Számítástudomány Alapjai
 
@@ -24,13 +25,4 @@ Egy ilyen repóban bármilyen tantárgyat létrelehet hozni, például:
 
 - Kategóriaelmélet 
 
-Nagyon érdekes a számomra, hogy a tantárgyak, habár eleinte szétszórtnak tűntek, sok közös mintát tartalmaznak, és ezeket formalizálni is lehet. Például a háromszögegyenlőtlenség a kalkulus és a lineáris algebra tárgytematikája is, és ez az egyik alapminta a kategórialméletben is.
-
-     explorations/TriangleOverlap.lean formalizálja
-
-A kategóriaelmélettel többekközött ezeket a közös mintákat lehet tanulmányozni, és azthiszem hogy olyan szempontból is hasznos lehet ez, hogy tapasztalatomban érthetőbb és könnyebb a közös mintát megtanulni, mintsem a sok szerteágazó alkalmazását külön-külön, a kapcsolatot nem ismerve tanulni.
-
-
-A két tankönyv formalizációnak lett egy olyan szuper alkalmazása, hogy így formalizálva be lehet importálni a különböző definíciókat és tételeket, és lehet azokat használni.
-
-például `kalkulus/formalizalt-tankonyv/Analizis/Lawvere_SzorzatObjektum.lean` formalizálva vannak kapcsolatok arról, hogy a `SPACE = PLANE × LINE` szorzat minta a Lawvere-Schanuel Conceptual Mathematics könyvből hol fordul elő a Leindler Analízis könyvben. A Galilei madara aminek a mozgása akkor folytonos, ha a szintjének és a síkjának a mozgása is folytonos, ott van az 5.2.2 definícióban - ami talán egy tök száraz szövegnek tűnhet - és valahogy az ∀ε∃δ-ban például ez az alapvető menő minta!
+Az egyik legerdekesebb otlet a szamomra ami most van ezzel a repoval kapcsolatban, hogy kozos mintakat keresek a kulonbozo targytematikaelemek kozott, mert mar a kurzus elejen eszrevettem (persze mar olvastam kategoriaelmeletrol elotte, szoval figyeltem is ezt a mintat, hogy hol lehet), hogy a szerteagazonak tuno tantargyak es matematikai teruletek kozott vannak kozos mintak, szoval a linearis algebra tankonyv valami nagyon bonyolult specializalt temanak tunt, aztan az analizis tankonyv egy kulon bonyolult temanak, aztan a diszkret matematika, szamelmelet, minden tantargyhoz van egy bonyolultnak tuno tankonyv, es eloszor az lehet a benyomasunk, hogy ezt mind kulon kulon megkell tanulni, de nem kell, mert vannak kozos mintak, ami mindegyik tankonyvben ugyanaz, csak mashogy van irva, olyasmi, mint mas nyelveken ugyanazt a dologot mas szoval mondjuk, vagy mas szimbolumokkal irjuk, persze lehet, hogy ket szo ami mas nyelven ugytunik ugyanazt a dolgot jelzi, egy kisse mas dolgot jelez, es szerintem ez lehet, hogy a matematikaban is igy van. Talan erre van kitalalva a ≅ jel, vagy iso, amit azthiszem akkor hasznalunk, amikor ket dolog nagyjabol ugyanaz.
