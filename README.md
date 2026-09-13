@@ -35,7 +35,7 @@ na ez valami amit most tanulok
 
 a kulonbozo mintak a tankonyvekben milyen szempontbol ugyanazok, milyen szempontbol kulonbozoek. Valamilyen szempontbol, perspektivabol, megkozelitesbol, nezopontbol mas-mas, esetleg ugyanaz latszik? 
 
-ezt a perspektiva dolgot most vettem eszre eloszor hogy a szempont magyarul azt is jelenti, hogy perspektiva, es ez lenyeges lehet (nem en vettem eszre eloszor, mert mar hallottam errol https://dspivak.net/7Sketches.pdf "observation", Yoneda lemma is kapcsolodik). Valahogy mashogy gondoltam erre mint perspektiva, hogy ket dolog ugyanaz, vagy nagyjabol ugyanaz, es ahogy a "szempont" kifejezest olvastam leesett, hogy az a perspektiva.
+ezt a perspektiva dolgot most vettem eszre eloszor hogy a szempont magyarul azt is jelenti, hogy perspektiva, es ez lenyeges lehet (nem en vettem eszre eloszor, mert mar hallottam errol, amikor a batyjam emlitette, hogy az "observation" dolog milyen erdekes a https://dspivak.net/7Sketches.pdf -ben, es azthiszem a Yoneda lemma is kapcsolodik). Valahogy mashogy gondoltam erre mint perspektiva, hogy ket dolog ugyanaz, vagy nagyjabol ugyanaz, es ahogy a "szempont" kifejezest olvastam leesett, hogy az a perspektiva.
 
 Milyen kapcsolatok leteznek a kulonbozo mintak kozott, es a kapcsolatok kozott milyen kapcsolatok vannak, stb?
 
