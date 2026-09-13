@@ -1,0 +1,375 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Ztw}{\Z_{12}}
+\newcommand{\PC}{\Z_{12}}
+\newcommand{\lean}[1]{\texttt{#1}}
+\newcommand{\boxrow}[1]{\texttt{#1}}
+
+\title{\bf Simple common ground:\\
+\emph{The Topos of Music}, Kalkulus I and Lineáris algebra I\\[2mm]
+\large and what to actually play on the piano and the drums}
+\author{Companion to \lean{RequestProject/MusicOverlap.lean}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Mazzola's \emph{The Topos of Music} is a big book, but everything in it is built
+on a handful of objects that are already \emph{Tárgytematika} elements of your
+two courses: a cyclic group, its affine maps, a group action and its invariants,
+a logarithm, and a product of two cyclic groups. This note lists those overlaps
+one by one, says which exercise of \lean{kalkulus\_gyakorlo.pdf} is the same
+mathematics, states the corresponding musical fact, and then --- the point of
+the exercise --- gives the simplest pattern that realises it at the keyboard or
+on the kit. Every mathematical claim made here is proved in the Lean file
+\lean{RequestProject/MusicOverlap.lean}; the theorem name is printed next to the
+claim, and Section~\ref{sec:index} is an index of them.
+\end{abstract}
+
+\section*{The answer in one table}
+
+\begin{longtable}{@{}p{3.1cm}p{3.9cm}p{3.6cm}p{4.4cm}@{}}
+\toprule
+\textbf{Shared object} & \textbf{Syllabus item} & \textbf{Mazzola} & \textbf{What you play}\\
+\midrule
+\endhead
+$\log$ / $\exp$, inverse pair
+ & Kalkulus: \emph{exponenciális függvények és inverzeik}; gy.\ 2.1e, 2.3, 2.13c
+ & pitch is $\log$ of frequency; equal temperament $2^{1/12}$
+ & tune a string; hear that ``the same interval'' means ``the same ratio''\\
+Quotient $\Z\to\Ztw$, periodicity
+ & Kalkulus: periodic functions, gy.\ 2.16g; Lin.\ alg.: homomorphism, kernel
+ & octave equivalence, pitch classes
+ & play a chord in any octave: same chord\\
+Affine maps $x\mapsto \pm x+n$
+ & Kalkulus gy.\ 2.16 (\emph{elemi transzformációs lépések}); gy.\ 2.7 ($f^{-1}=f$)
+ & transposition $T_n$, inversion $I_n$; the symmetry group
+ & transpose a riff; play a melody in mirror image\\
+Group, composition, inverse
+ & Lin.\ alg.: \emph{mátrixok inverze}; Kalkulus gy.\ 2.18 (composition)
+ & the $T/I$ group, $24$ elements (dihedral)
+ & the $12$ keys and their mirrors: one riff, $24$ versions\\
+Group action, orbit, invariant
+ & Lin.\ alg.: linear maps, invariants, determinant
+ & interval content of a chord
+ & why major and minor are the same chord, upside down\\
+Cyclic group again, but for time
+ & Lin.\ alg.: $\Z_n$; Kalkulus: periodicity
+ & onset sets, rhythm as a subset of $\Z_n$
+ & tresillo, clave, Euclidean rhythms on the kit\\
+Product / CRT $\Ztw\cong\Z_3\times\Z_4$
+ & Lin.\ alg.: direct product; Kalkulus gy.\ 1.4d (index set is a product)
+ & the ``time--pitch'' product of coordinates
+ & the $3$-against-$4$ polyrhythm\\
+\bottomrule
+\end{longtable}
+
+\noindent
+Everything below is one section per row.
+
+\section{Pitch is a logarithm (Kalkulus: exponential and its inverse)}
+
+Frequencies multiply; keyboards add. The map between the two is
+\[
+  \operatorname{pitch}(f) \;=\; 69 + 12\log_2\!\left(\frac{f}{440}\right),
+\]
+so that A4 $=440$\,Hz is note $69$ (\lean{pitch}).
+
+\begin{itemize}[leftmargin=1.4em]
+\item \textbf{Octave $=$ doubling.} $\operatorname{pitch}(2f)=\operatorname{pitch}(f)+12$
+      (\lean{pitch\_octave}). The multiplicative group $(\R_{>0},\cdot)$ is carried onto
+      the additive group $(\R,+)$: this is $\lg(xy)=\lg x+\lg y$, the functional
+      equation the Kalkulus course uses all semester.
+\item \textbf{Only the ratio matters.}
+      $\operatorname{pitch}(f)-\operatorname{pitch}(g)=12\log_2(f/g)$ (\lean{pitch\_sub}).
+      A melody transposed to another key is the \emph{same} melody because the ratios
+      are unchanged. This is exactly why transposition is a symmetry and not a
+      distortion.
+\item \textbf{Equal temperament.} $\bigl(2^{1/12}\bigr)^{12}=2$
+      (\lean{semitone\_pow\_twelve}), and multiplying a frequency by $2^{1/12}$ raises
+      the pitch by one semitone (\lean{pitch\_semitone}).
+\end{itemize}
+
+\paragraph{What to play (piano).}
+Play C, then the C an octave up: the string vibrates twice as fast. Then play
+C--G (ratio $\approx 3/2$, $7$ semitones) and then G--D: the same \emph{sound
+relation} twice, i.e.\ the same \emph{added} distance $7+7=14\equiv 2 \pmod{12}$
+on the keyboard. You have just performed $\log$.
+
+\paragraph{Why it belongs to the syllabus.}
+Gyakorló 2.1e and 2.13c compute with $\lg$; 2.3 and 2.4 compute inverse
+functions. Pitch and frequency are an inverse pair of exactly that kind:
+$\operatorname{pitch}$ and $f\mapsto 440\cdot 2^{(f-69)/12}$.
+
+\section{Octave equivalence is a quotient homomorphism}
+
+Write $\PC=\Z/12\Z$ for the twelve notes, $0=\mathrm{C}$, $1=\mathrm{C}\sharp$,
+\dots, $11=\mathrm{B}$ (\lean{PC}, \lean{C}, \lean{D}, \dots). The single
+sentence
+\[
+  n+12 \equiv n \pmod{12} \qquad (\lean{pc\_octave})
+\]
+is the whole of ``a C is a C in any octave'', and
+$\overline{m+n}=\overline{m}+\overline{n}$ (\lean{pc\_add}) says that the
+quotient map preserves intervals.
+
+For the linear algebra course this is a homomorphism with kernel $12\Z$; for the
+calculus course it is periodicity, the same thing that makes
+$\sin$ and $\cos$ (gyakorló 2.16g, 3.7) behave the way they do.
+
+\paragraph{What to play (piano).}
+Take the C major triad C--E--G and re-voice it: E--G--C, then G--C--E. As sets of
+pitch classes these are the same three residues; only the octave representatives
+changed. Every jazz voicing exercise is a choice of lift along the quotient map
+$\Z\to\Ztw$.
+
+\section{Transposition and inversion are the affine maps of 2.16}
+
+Define, on $\PC$,
+\[
+  T_n(x)=x+n \qquad\text{(transposition)},\qquad
+  I_n(x)=n-x \qquad\text{(inversion)} .
+\]
+These are the maps $x\mapsto \pm x + n$: precisely the ``elemi transzformációs
+lépések'' of gyakorló 2.16 (shift the graph, reflect the graph), done over
+$\Ztw$ instead of over $\R$.
+
+\begin{itemize}[leftmargin=1.4em]
+\item $T_m\circ T_n=T_{m+n}$ \hfill (\lean{T\_comp})
+\item $I_n\circ I_n=\mathrm{id}$: inversion is an \emph{involution}
+      \hfill (\lean{Inv\_involutive})
+\item $I_m\circ I_n=T_{m-n}$: two mirrors make a shift \hfill (\lean{Inv\_comp\_Inv})
+\item both are bijections \hfill (\lean{T\_bijective}, \lean{Inv\_bijective})
+\end{itemize}
+
+Gyakorló 2.7 asks you to check that $f(x)=\frac{x+1}{x-1}$ satisfies $f^{-1}=f$.
+That exercise \emph{is} musical inversion: a self-inverse map. Gyakorló 2.18
+(composition of injective maps is injective) is the closure property that makes
+these maps a group at all.
+
+\paragraph{The group is the dihedral group of order 24.}
+Sending the rotation $r_i$ of the twelve-note clock face to a transposition and
+the reflection $sr_i$ to an inversion is an injective group homomorphism
+$D_{12}\to \mathrm{Sym}(\PC)$ (\lean{TIhom}, \lean{TIhom\_injective}), so the group
+generated by all transpositions and inversions has exactly
+\[
+  24 = 12\ \text{transpositions} + 12\ \text{inversions}
+  \qquad (\lean{TI\_card})
+\]
+elements. This is the group that music theory calls $T/I$ and that Mazzola treats
+as a special case of the affine symmetries of a module --- the same affine
+symmetries the linear algebra course meets as $x\mapsto Ax+b$.
+
+\paragraph{The linear algebra behind it: the affine group.}
+Write $\operatorname{aff}_{a,b}(x)=ax+b$ (\lean{affine}). Then $T_n=\operatorname{aff}_{1,n}$
+and $I_n=\operatorname{aff}_{-1,n}$ (\lean{T\_eq\_affine}, \lean{Inv\_eq\_affine}), affine
+maps compose to affine maps (\lean{affine\_comp}), and $\operatorname{aff}_{a,b}$ is
+invertible exactly when $a$ is a unit (\lean{affine\_bijective}) --- the modular
+version of ``$\det\neq 0$'' from Lineáris algebra I. There are four units mod $12$,
+namely $1,5,7,11$ (\lean{units\_card}), so the full affine group has $4\cdot 12=48$
+elements and the musically familiar $T/I$ group is the half with $a=\pm1$. The
+other two multipliers are the classical ``circle-of-fifths transform'' $x\mapsto 7x$
+and its inverse $x\mapsto 5x$: play a chromatic scale but multiply every step by
+seven and you are playing the circle of fifths.
+
+\paragraph{What to play (piano), three one-minute drills.}
+\begin{enumerate}[leftmargin=1.6em]
+\item \textbf{$T$ drill.} Play a two-bar riff on the white keys. Now play it
+      starting a minor third higher ($T_3$), then again ($T_6$), then again
+      ($T_9$). After four moves you are home: $T_3^4=T_{12}=\mathrm{id}$.
+\item \textbf{$I$ drill.} Put your right hand on C. For every note the right hand
+      plays $x$ semitones \emph{up}, the left hand plays $x$ semitones
+      \emph{down}: the left hand is playing $I_0$. Do it once more with the mirror
+      centred on G ($I_7$) and hear the difference.
+\item \textbf{Two mirrors $=$ one shift.} Play the riff, invert it around C,
+      then invert \emph{that} around G. You are now playing the original riff
+      transposed by $7-0=7$ semitones: $I_7\circ I_0=T_7$.
+\end{enumerate}
+
+\section{The invariant: interval content}
+
+For a chord $S\subseteq\PC$ let $\operatorname{ivec}(S,i)$ count the ordered pairs of
+notes of $S$ lying $i$ semitones apart (\lean{ivec}). Then
+\[
+  \operatorname{ivec}(T_n S,\,i)=\operatorname{ivec}(S,\,i),\qquad
+  \operatorname{ivec}(I_n S,\,i)=\operatorname{ivec}(S,\,-i)
+  \qquad (\lean{ivec\_T},\ \lean{ivec\_Inv}).
+\]
+So interval content is the invariant of the $T/I$ action, in the same sense in
+which rank and determinant are invariants of a matrix under change of basis
+(Lineáris algebra I). Concretely:
+\[
+  \{0,4,7\}\ \text{(major)}\ \xrightarrow{\;I_7\;}\ \{0,3,7\}\ \text{(minor)}
+  \qquad (\lean{minor\_eq\_inverted\_major}),
+\]
+so major and minor have the same interval content read backwards
+(\lean{triads\_same\_interval\_content}). Two chords built from the same
+intervals, two completely different moods: the invariant explains the family
+resemblance, the group element explains the difference.
+
+\paragraph{What to play (piano).}
+Play C--E--G, then C--E$\flat$--G. Same three gaps $\{3,4,5\}$ in a different
+order. Then play the mirror move directly: hold G, and swap E for E$\flat$ ---
+one finger, and you have applied $I_7$.
+
+\section{Simple things the group hands you}
+
+All of the following are finite checks, settled in Lean by \lean{decide}.
+
+\begin{itemize}[leftmargin=1.4em]
+\item \textbf{The circle of fifths visits all twelve notes}
+      (\lean{fifths\_surjective}), because $\gcd(7,12)=1$. Playing
+      C--G--D--A--E--B--F$\sharp$--C$\sharp$--G$\sharp$--D$\sharp$--A$\sharp$--F--C
+      is a single cycle through the whole keyboard.
+\item \textbf{The major scale is seven consecutive fifths}
+      (\lean{diatonic\_eq\_seven\_fifths}): stack F--C--G--D--A--E--B, sort, and
+      you have C major. The pentatonic scale is five consecutive fifths
+      (\lean{pentatonic\_eq\_five\_fifths}): C--D--E--G--A, the shape of the five black keys.
+\item \textbf{The major scale has no symmetry}
+      (\lean{diatonic\_asymmetric}): shifting it always produces a different set
+      of notes, which is why the twelve keys are genuinely twelve keys.
+\item \textbf{The whole-tone scale has only two transpositions}
+      (\lean{wholeTone\_T2}, \lean{wholeTone\_two\_transpositions}): it is fixed by
+      $T_2$. This is Messiaen's ``mode of limited transposition'', and it is the
+      reason whole-tone runs sound directionless --- there is no ``home''.
+\item \textbf{The augmented triad is an orbit}: C--E--G$\sharp$ is the orbit of C
+      under $T_4$ (\lean{augmented\_orbit}), and it too is symmetric.
+\end{itemize}
+
+\paragraph{What to play (piano).}
+Practise the circle of fifths with the left hand alone, one bar per note.
+Then play a whole-tone run up and down and notice that you cannot tell where it
+began: symmetric sets carry no information about the tonic, asymmetric sets do.
+That single contrast is the musical content of the two theorems above.
+
+\section{Rhythm is the same group, used for time}
+
+A one-bar pattern of $n$ equal slots is a subset of $\Z_n$ (\lean{Pattern}), and
+``start the loop somewhere else'' is $x\mapsto x+k$ --- literally the same
+operation as transposition (\lean{transposition\_eq\_rotation}). This is
+Mazzola's point that pitch and onset are two coordinates of one object, and it is
+also the cheapest thing in this whole note to use at the kit.
+
+\paragraph{Euclidean rhythms.} Spread $k$ onsets as evenly as possible over $n$
+slots: $E(k,n)=\{\lfloor in/k\rfloor : i<k\}$ (\lean{euclid}). Writing
+\texttt{x} for a hit and \texttt{.} for a rest:
+
+\begin{center}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Pattern & Slots & Box notation & Name / where you hear it\\
+\midrule
+$E(2,4)$ & 4  & \boxrow{x.x.}            & backbeat\\
+$E(3,8)$ & 8  & \boxrow{x.x..x..}        & \emph{tresillo} (2--3--3 here) (\lean{euclid\_3\_8})\\
+$E(5,8)$ & 8  & \boxrow{xx.xx.x.}        & \emph{cinquillo} (\lean{euclid\_5\_8})\\
+$E(5,16)$& 16 & \boxrow{x..x..x..x..x...}& evenly spread clave (\lean{euclid\_5\_16})\\
+son clave& 16 & \boxrow{x..x..x...x.x...}& the 3--2 son clave (\lean{clave})\\
+$E(4,16)$& 16 & \boxrow{x...x...x...x...}& four-on-the-floor\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}[leftmargin=1.4em]
+\item \textbf{Asymmetric patterns tell you where beat one is.} The tresillo is
+      fixed by no rotation at all (\lean{tresillo\_asymmetric}); rotate it and you
+      get a different pattern. That is why it grooves.
+\item \textbf{Symmetric patterns do not.} Four-on-the-floor is unchanged by
+      rotating one beat (\lean{fourOnFloor\_symmetric}), so on its own it cannot
+      tell you where the bar starts --- you need the backbeat or the clave for
+      that.
+\end{itemize}
+
+\paragraph{What to play (drums), in order of difficulty.}
+\begin{enumerate}[leftmargin=1.6em]
+\item Kick \boxrow{x...x...x...x...} (four-on-the-floor), snare on \boxrow{....x.......x...}.
+      Feel that the kick alone is symmetric and the snare breaks the symmetry.
+\item Move the kick to the tresillo \boxrow{x..x..x.} over eight eighths --- count
+      \emph{3--3--2} out loud. Keep the snare on beats 2 and 4. This one pattern
+      covers a huge amount of pop, reggaetón and Afro-Cuban music.
+\item Play the son clave \boxrow{x..x..x...x.x...} on the rim with one hand and
+      steady eighths on the hi-hat with the other.
+\item Cinquillo \boxrow{xx.xx.x.} with alternating sticking.
+\end{enumerate}
+
+\section{Polyrhythm is a product (Chinese remainder)}
+
+Two hands, one hitting every $3$ slots, one every $4$. They coincide exactly
+every $12$ slots (\lean{polyrhythm\_3\_4}), and, better,
+\[
+  \Ztw \;\cong\; \Z_3\times\Z_4 \qquad (\lean{polyIso}),
+\]
+so a position in the bar \emph{is} the pair (where you are in the three-cycle,
+where you are in the four-cycle). This is the universal property of the product
+--- the subject of the companion file \lean{RequestProject/ProductOverlap.lean}
+--- heard rather than drawn, and $12=3\cdot 4$ independent choices
+(\lean{poly\_card}).
+
+\paragraph{What to play.}
+Count twelve slots per bar. Right hand on $0,3,6,9$; left hand on $0,4,8$:
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+slots  & \boxrow{0\,1\,2\,3\,4\,5\,6\,7\,8\,9\,10\,11}\\
+right (4 hits) & \boxrow{x..x..x..x..}\\
+left  (3 hits) & \boxrow{x...x...x...}\\
+\end{tabular}
+\end{center}
+The hands meet only on slot $0$. At the piano, play the same thing as a hemiola:
+right hand three notes per bar, left hand four.
+
+\section{What we deliberately left out of Mazzola}
+
+The overlaps above are the elementary layer. \emph{The Topos of Music} goes on to
+local and global compositions, denotators, presheaves and Grothendieck topologies,
+and its counterpoint model; none of that is needed for the patterns in this note,
+and none of it appears in either \emph{Tárgytematika}. What \emph{does} appear in
+both, and is used above, is: groups and their actions, homomorphisms and
+quotients, affine maps, products, invariants, logarithms and periodicity.
+
+\section{Index of the Lean results}\label{sec:index}
+
+All in \lean{RequestProject/MusicOverlap.lean}, all proved, no \lean{sorry}.
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Lean name & Claim\\
+\midrule
+\lean{pitch}, \lean{pitch\_octave} & pitch is $\log$ of frequency; octave $=+12$\\
+\lean{pitch\_sub}                  & pitch difference depends only on the ratio\\
+\lean{semitone\_pow\_twelve}, \lean{pitch\_semitone} & equal temperament\\
+\lean{pc\_octave}, \lean{pc\_add}  & octave equivalence is a quotient homomorphism\\
+\lean{T}, \lean{Inv}, \lean{T\_comp}, \lean{Inv\_involutive}, \lean{Inv\_comp\_Inv} & the two affine operations\\
+\lean{T\_bijective}, \lean{Inv\_bijective} & both are bijections\\
+\lean{affine}, \lean{T\_eq\_affine}, \lean{Inv\_eq\_affine}, \lean{affine\_comp} & $T$ and $I$ are the affine maps $x\mapsto ax+b$\\
+\lean{affine\_bijective}, \lean{units\_card} & invertible $\iff$ unit multiplier; $48$ affine maps\\
+\lean{TIhom}, \lean{TIhom\_injective}, \lean{TI\_card} & the $T/I$ group is dihedral of order $24$\\
+\lean{ivec}, \lean{ivec\_T}, \lean{ivec\_Inv} & interval content is the invariant\\
+\lean{minor\_eq\_inverted\_major}, \lean{triads\_same\_interval\_content} & major and minor are mirror images\\
+\lean{fifths\_surjective} & the circle of fifths is one cycle\\
+\lean{diatonic\_eq\_seven\_fifths}, \lean{pentatonic\_eq\_five\_fifths} & scales are stacks of fifths\\
+\lean{diatonic\_asymmetric} & the major scale has no transpositional symmetry\\
+\lean{wholeTone\_T2}, \lean{wholeTone\_two\_transpositions} & limited transposition\\
+\lean{augmented\_orbit} & the augmented triad is a $T_4$-orbit\\
+\lean{transposition\_eq\_rotation} & transposing $=$ rotating a loop\\
+\lean{euclid}, \lean{euclid\_3\_8}, \lean{euclid\_5\_8}, \lean{euclid\_5\_16} & Euclidean rhythms\\
+\lean{tresillo\_asymmetric}, \lean{fourOnFloor\_symmetric} & which grooves point at beat one\\
+\lean{polyrhythm\_3\_4}, \lean{polyIso}, \lean{poly\_card} & $3$-against-$4$ is a product\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}
